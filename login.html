@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Therapio – Login/Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-light: #d1fae5;
+      --secondary: #0f766e;
+      --secondary-dark: #115e59;
+      --background: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --gradient: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 40px rgba(15, 118, 110, 0.12);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--secondary);
+    }
+
+    .btn {
+      background: var(--gradient);
+      color: white;
+      padding: 12px 26px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    /* ================= LOGIN PAGE ================= */
+    .login-page {
+      display: flex;
+      min-height: calc(100vh - 70px);
+    }
+
+    .login-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100%;
+    }
+
+    /* Left Side: Forms */
+    .login-form-container {
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: white;
+    }
+
+    .form-header {
+      margin-bottom: 40px;
+    }
+
+    .form-header h1 {
+      font-size: 2.5rem;
+      color: var(--secondary);
+      margin-bottom: 10px;
+      background: linear-gradient(120deg, var(--secondary-dark), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .form-header p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    .tabs {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: var(--radius);
+      padding: 5px;
+      margin-bottom: 30px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-light);
+      cursor: pointer;
+      border-radius: calc(var(--radius) - 2px);
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      background: white;
+      color: var(--secondary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group label i {
+      color: var(--primary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 42px;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: color 0.3s ease;
+    }
+
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    .checkbox input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .forgot-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-link:hover {
+      color: var(--secondary);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+
+    .auth-btn i {
+      margin-right: 10px;
+    }
+
+    .divider {
+      text-align: center;
+      position: relative;
+      margin: 25px 0;
+    }
+
+    .divider span {
+      background: white;
+      padding: 0 20px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .divider:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e2e8f0;
+      z-index: -1;
+    }
+
+    .social-login {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .social-btn {
+      padding: 14px;
+      border: 2px solid #e2e8f0;
+      background: white;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .social-btn.google {
+      color: #DB4437;
+    }
+
+    .social-btn.google:hover {
+      background: #f8eae9;
+      border-color: #DB4437;
+    }
+
+    .social-btn.facebook {
+      color: #4267B2;
+    }
+
+    .social-btn.facebook:hover {
+      background: #e8f0fe;
+      border-color: #4267B2;
+    }
+
+    .switch-form {
+      text-align: center;
+      color: var(--text-light);
+    }
+
+    .switch-form a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .switch-form a:hover {
+      color: var(--secondary);
+    }
+
+    /* Right Side: Owl Animation */
+    .owl-side {
+      position: relative;
+      background: linear-gradient(135deg, var(--primary-light), #ffffff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .owl-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+    }
+
+    .owl {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .owl-body {
+      position: relative;
+      width: 150px;
+      height: 120px;
+      background: linear-gradient(135deg, #8B4513, #D2691E);
+      border-radius: 50% 50% 40% 40%;
+      margin: 0 auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .owl-head {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 80px;
+      background: linear-gradient(135deg, #8B4513, #A0522D);
+      border-radius: 50% 50% 40% 40%;
+    }
+
+    .owl-face {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 50px;
+    }
+
+    .owl-eyes {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 15px;
+    }
+
+    .owl-eye {
+      width: 35px;
+      height: 35px;
+      background: #2c3e50;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      border: 3px solid #8B4513;
+    }
+
+    .owl-eye:after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .owl-beak {
+      width: 30px;
+      height: 15px;
+      background: #FFD700;
+      border-radius: 0 0 50% 50%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .owl-ears {
+      position: absolute;
+      top: -20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 25px;
+    }
+
+    .owl-ear {
+      width: 20px;
+      height: 30px;
+      background: linear-gradient(135deg, #8B4513, #A0522D);
+      border-radius: 50% 50% 0 0;
+      position: relative;
+    }
+
+    .owl-ear.left-ear {
+      transform: rotate(-10deg);
+    }
+
+    .owl-ear.right-ear {
+      transform: rotate(10deg);
+    }
+
+    .owl-wings {
+      position: absolute;
+      top: 40px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+
+    .owl-wing {
+      width: 60px;
+      height: 40px;
+      background: linear-gradient(135deg, #8B4513, #D2691E);
+      border-radius: 50%;
+      position: relative;
+      animation: wingFlap 3s infinite ease-in-out;
+    }
+
+    .owl-wing.left-wing {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes wingFlap {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    .owl-feet {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+    }
+
+    .owl-foot {
+      width: 15px;
+      height: 25px;
+      background: #D2691E;
+      border-radius: 50% 50% 0 0;
+      position: relative;
+    }
+
+    .owl-foot:before {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: #8B4513;
+      border-radius: 50%;
+    }
+
+    .owl-branch {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 15px;
+      background: linear-gradient(135deg, #654321, #8B4513);
+      border-radius: 10px;
+      z-index: 1;
+    }
+
+    .wisdom-text {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      color: var(--secondary);
+    }
+
+    .wisdom-text h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .wisdom-text p {
+      color: var(--text-light);
+      max-width: 300px;
+    }
+
+    /* Owl animation elements */
+    .thought-bubble {
+      position: absolute;
+      top: 20%;
+      right: 20%;
+      width: 100px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: var(--shadow-md);
+      animation: float 4s infinite ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .thought-bubble:before {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 30px;
+      width: 30px;
+      height: 30px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .thought-bubble i {
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-10px) rotate(2deg); }
+      66% { transform: translateY(5px) rotate(-2deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .owl-side {
+        display: none;
+      }
+      
+      .login-form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 40px 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .social-login {
+        grid-template-columns: 1fr;
+      }
+      
+      .login-form-container {
+        padding: 30px 20px;
+      }
+      
+      nav ul {
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-header h1 {
+        font-size: 2rem;
+      }
+      
+      .tabs {
+        flex-direction: column;
+      }
+      
+      .tab {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body class="login-page">
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio Logo">
+        <span>Therapio</span>
+      </a>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html" class="btn">Back to Home</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="login-container">
+    <!-- Left Side: Login/Register Form -->
+    <div class="login-form-container">
+      <div class="form-header">
+        <h1>Welcome Back</h1>
+        <p>Sign in to your Therapio account or create a new one</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Login</button>
+        <button class="tab" data-tab="register">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form active">
+        <div class="form-group">
+          <label for="login-email">
+            <i class="fas fa-envelope"></i> Email Address
+          </label>
+          <input type="email" id="login-email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          <input type="password" id="login-password" placeholder="Enter your password" required>
+          <div class="password-toggle">
+            <i class="fas fa-eye" id="toggle-password"></i>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox">
+            <input type="checkbox" id="remember-me">
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn auth-btn">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+
+        <div class="divider">
+          <span>Or continue with</span>
+        </div>
+
+        <div class="social-login">
+          <button type="button" class="social-btn google">
+            <i class="fab fa-google"></i> Google
+          </button>
+          <button type="button" class="social-btn facebook">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
+        </div>
+
+        <p class="switch-form">
+          Don't have an account? <a href="#" data-tab="register">Sign up here</a>
+        </p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="auth-form">
+        <div class="form-group">
+          <label for="register-name">
+            <i class="fas fa-user"></i> Full Name
+          </label>
+          <input type="text" id="register-name" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="register-email">
+            <i class="fas fa-envelope"></i> Email Address
+          </label>
+          <input type="email" id="register-email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="register-password">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          <input type="password" id="register-password" placeholder="Create a password" required>
+          <div class="password-toggle">
+            <i class="fas fa-eye" id="toggle-register-password"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="register-confirm">
+            <i class="fas fa-lock"></i> Confirm Password
+          </label>
+          <input type="password" id="register-confirm" placeholder="Confirm your password" required>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox">
+            <input type="checkbox" id="terms" required>
+            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn auth-btn">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+
+        <div class="divider">
+          <span>Or sign up with</span>
+        </div>
+
+        <div class="social-login">
+          <button type="button" class="social-btn google">
+            <i class="fab fa-google"></i> Google
+          </button>
+          <button type="button" class="social-btn facebook">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
+        </div>
+
+        <p class="switch-form">
+          Already have an account? <a href="#" data-tab="login">Sign in here</a>
+        </p>
+      </form>
+    </div>
+
+    <!-- Right Side: Owl Animation -->
+    <div class="owl-side">
+      <!-- Thought bubble -->
+      <div class="thought-bubble">
+        <i class="fas fa-brain"></i>
+      </div>
+      
+      <!-- Owl -->
+      <div class="owl-container">
+        <div class="owl" id="owl">
+          <div class="owl-branch"></div>
+          <div class="owl-body">
+            <div class="owl-head">
+              <div class="owl-face">
+                <div class="owl-eyes">
+                  <div class="owl-eye left-eye"></div>
+                  <div class="owl-eye right-eye"></div>
+                </div>
+                <div class="owl-beak"></div>
+              </div>
+              <div class="owl-ears">
+                <div class="owl-ear left-ear"></div>
+                <div class="owl-ear right-ear"></div>
+              </div>
+            </div>
+            <div class="owl-wings">
+              <div class="owl-wing left-wing"></div>
+              <div class="owl-wing right-wing"></div>
+            </div>
+          </div>
+          <div class="owl-feet">
+            <div class="owl-foot"></div>
+            <div class="owl-foot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wisdom-text">
+        <h2>Wisdom Awaits You</h2>
+        <p>The owl symbolizes wisdom and guidance on your mental wellness journey with Therapio.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Owl following cursor animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const owl = document.getElementById('owl');
+      const leftEye = document.querySelector('.left-eye');
+      const rightEye = document.querySelector('.right-eye');
+      const owlContainer = document.querySelector('.owl-container');
+      
+      if (!owl || !owlContainer) return;
+      
+      let mouseX = 0;
+      let mouseY = 0;
+      let eyeX = 0;
+      let eyeY = 0;
+      
+      // Track mouse movement
+      document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // Calculate position relative to owl container
+        const containerRect = owlContainer.getBoundingClientRect();
+        const centerX = containerRect.left + containerRect.width / 2;
+        const centerY = containerRect.top + containerRect.height / 2;
+        
+        // Calculate distance from center
+        const deltaX = mouseX - centerX;
+        const deltaY = mouseY - centerY;
+        
+        // Move eyes to look at cursor (limited movement)
+        const maxEyeMove = 5;
+        eyeX = Math.min(Math.max(deltaX * 0.015, -maxEyeMove), maxEyeMove);
+        eyeY = Math.min(Math.max(deltaY * 0.015, -maxEyeMove), maxEyeMove);
+        
+        // Rotate owl head slightly based on cursor position
+        const rotation = deltaX * 0.008;
+        owl.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+        
+        // Move owl slightly towards cursor
+        const owlMoveX = deltaX * 0.015;
+        const owlMoveY = deltaY * 0.015;
+        owl.style.left = `calc(50% + ${owlMoveX}px)`;
+        owl.style.top = `calc(50% + ${owlMoveY}px)`;
+      });
+      
+      // Animate owl eyes
+      function animateEyes() {
+        if (leftEye && rightEye) {
+          leftEye.style.transform = `translate(${eyeX}px, ${eyeY}px)`;
+          rightEye.style.transform = `translate(${eyeX}px, ${eyeY}px)`;
+        }
+        
+        // Blink occasionally
+        if (Math.random() < 0.002) {
+          blink();
+        }
+        
+        requestAnimationFrame(animateEyes);
+      }
+      
+      function blink() {
+        leftEye.style.height = '5px';
+        rightEye.style.height = '5px';
+        
+        setTimeout(() => {
+          leftEye.style.height = '35px';
+          rightEye.style.height = '35px';
+        }, 150);
+      }
+      
+      // Start animation
+      animateEyes();
+      
+      // Add interaction when hovering over owl
+      owl.addEventListener('mouseenter', function() {
+        this.style.transform += ' scale(1.05)';
+      });
+      
+      owl.addEventListener('mouseleave', function() {
+        this.style.transform = this.style.transform.replace(' scale(1.05)', '');
+      });
+    });
+    
+    // Login/Register Form Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tab switching
+      const tabs = document.querySelectorAll('.tab');
+      const forms = document.querySelectorAll('.auth-form');
+      const switchLinks = document.querySelectorAll('.switch-form a');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabName = this.getAttribute('data-tab');
+          
+          // Update active tab
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Show corresponding form
+          forms.forEach(form => {
+            form.classList.remove('active');
+            if (form.id === `${tabName}-form`) {
+              form.classList.add('active');
+            }
+          });
+        });
+      });
+      
+      // Switch form links
+      switchLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const tabName = this.getAttribute('data-tab');
+          
+          // Find and click the corresponding tab
+          const targetTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+          if (targetTab) targetTab.click();
+        });
+      });
+      
+      // Password toggle visibility
+      const togglePassword = document.getElementById('toggle-password');
+      const toggleRegisterPassword = document.getElementById('toggle-register-password');
+      const loginPassword = document.getElementById('login-password');
+      const registerPassword = document.getElementById('register-password');
+      
+      function togglePasswordVisibility(button, input) {
+        if (!button || !input) return;
+        
+        button.addEventListener('click', function() {
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      }
+      
+      togglePasswordVisibility(togglePassword, loginPassword);
+      togglePasswordVisibility(toggleRegisterPassword, registerPassword);
+      
+      // Form submission
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
+          
+          // Simple validation
+          if (!email || !password) {
+            alert('Please fill in all fields');
+            return;
+          }
+          
+          // Simulate login
+          localStorage.setItem('therapio_user', JSON.stringify({
+            name: email.split('@')[0],
+            email: email,
+            loggedIn: true,
+            avatar: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(email.split('@')[0]) + '&background=10b981&color=fff'
+          }));
+          
+          // Redirect to home page
+          window.location.href = 'index.html';
+        });
+      }
+      
+      if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const name = document.getElementById('register-name').value;
+          const email = document.getElementById('register-email').value;
+          const password = document.getElementById('register-password').value;
+          const confirmPassword = document.getElementById('register-confirm').value;
+          const terms = document.getElementById('terms').checked;
+          
+          // Validation
+          if (!name || !email || !password || !confirmPassword) {
+            alert('Please fill in all fields');
+            return;
+          }
+          
+          if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+          }
+          
+          if (!terms) {
+            alert('Please agree to the Terms of Service and Privacy Policy');
+            return;
+          }
+          
+          // Simulate registration
+          localStorage.setItem('therapio_user', JSON.stringify({
+            name: name,
+            email: email,
+            loggedIn: true,
+            avatar: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=10b981&color=fff'
+          }));
+          
+          // Redirect to home page
+          window.location.href = 'index.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
