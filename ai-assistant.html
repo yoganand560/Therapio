@@ -442,15 +442,32 @@
     window.addEventListener('DOMContentLoaded', function() {
       initializeFirebase();
       
-      // Get or create anonymous user ID
-      currentUser = localStorage.getItem('userId');
-      if (!currentUser) {
-        currentUser = 'user_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('userId', currentUser);
+      // Check if user is logged in
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            currentUser = user.uid;
+            loadChatHistory();
+          } else {
+            // Not signed in, use anonymous user ID
+            currentUser = localStorage.getItem('userId');
+            if (!currentUser) {
+              currentUser = 'user_' + Math.random().toString(36).substr(2, 9);
+              localStorage.setItem('userId', currentUser);
+            }
+            loadChatHistory();
+          }
+        });
+      } else {
+        // Firebase not initialized, use anonymous ID
+        currentUser = localStorage.getItem('userId');
+        if (!currentUser) {
+          currentUser = 'user_' + Math.random().toString(36).substr(2, 9);
+          localStorage.setItem('userId', currentUser);
+        }
+        loadChatHistory();
       }
-      
-      // Load chat history if available
-      loadChatHistory();
     });
 
     function handleEnter(event) {

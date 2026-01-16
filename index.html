@@ -752,7 +752,7 @@
       <li><a href="#connect">Therapy</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Support</a></li>
-      <li><a class="btn" href="#register">Login/Register</a></li>
+      <li id="auth-link"><a class="btn" href="login.html">Login/Register</a></li>
     </ul>
   </div>
 </nav>
@@ -1008,4 +1008,25 @@
       </div>
       <h3>Crisis Support</h3>
       <p>1-800-123-4567</p>
-      <p class="contact-subtext">24/7 National
+      <p class="contact-subtext">24/7 National Suicide Prevention Lifeline</p>
+    </div>
+  </div>
+</section>
+
+</body>
+
+<script>
+  // Check if user is logged in
+  document.addEventListener("DOMContentLoaded", function() {
+    const userData = localStorage.getItem("therapio_user");
+    if (userData) {
+      const user = JSON.parse(userData);
+      const authLink = document.getElementById("auth-link");
+      if (authLink && user.loggedIn) {
+        authLink.innerHTML = "<a class=\"btn\" href=\"dashboard.html\"><i class=\"fas fa-dashboard\"></i> My Dashboard</a>";
+      }
+    }
+  });
+</script>
+
+</html>

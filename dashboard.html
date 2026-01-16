@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Therapio – My Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-light: #d1fae5;
+      --secondary: #0f766e;
+      --secondary-dark: #115e59;
+      --background: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --gradient: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 40px rgba(15, 118, 110, 0.12);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ================= NAVBAR ================= */
+    nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 5%;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 10px;
+      min-width: 200px;
+      display: none;
+    }
+
+    .dropdown.active {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .dropdown-item:hover {
+      background: var(--primary-light);
+    }
+
+    .logout-btn {
+      color: #ef4444 !important;
+    }
+
+    /* ================= DASHBOARD ================= */
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 5%;
+    }
+
+    .welcome-section {
+      background: var(--gradient);
+      color: white;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .welcome-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .welcome-section p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 25px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .stat-icon.primary { background: var(--primary-light); color: var(--primary); }
+    .stat-icon.secondary { background: #dbeafe; color: #3b82f6; }
+    .stat-icon.warning { background: #fef3c7; color: #f59e0b; }
+    .stat-icon.success { background: #d1fae5; color: #059669; }
+
+    .stat-card h3 {
+      font-size: 2rem;
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+
+    .stat-card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .action-card {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .action-card i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .action-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: var(--secondary);
+    }
+
+    .action-card p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background: var(--gradient);
+      color: white;
+      padding: 12px 26px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--secondary);
+      border: 2px solid var(--primary);
+    }
+
+    .recent-activity {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .recent-activity h2 {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      margin-bottom: 20px;
+    }
+
+    .activity-item {
+      padding: 15px;
+      border-left: 3px solid var(--primary);
+      background: var(--primary-light);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+    }
+
+    .activity-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .activity-date {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+
+    .activity-text {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-section h1 {
+        font-size: 1.8rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio Logo">
+      </a>
+      <div class="nav-right">
+        <div class="user-menu" onclick="toggleDropdown()">
+          <img src="" id="user-avatar" class="user-avatar" alt="User Avatar">
+          <span class="user-name" id="user-name">Loading...</span>
+          <i class="fas fa-chevron-down"></i>
+          
+          <div class="dropdown" id="user-dropdown">
+            <a href="dashboard.html" class="dropdown-item">
+              <i class="fas fa-dashboard"></i> Dashboard
+            </a>
+            <a href="ai-assistant.html" class="dropdown-item">
+              <i class="fas fa-brain"></i> AI Assistant
+            </a>
+            <a href="#" class="dropdown-item" onclick="showProfile()">
+              <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="#" class="dropdown-item" onclick="showSettings()">
+              <i class="fas fa-cog"></i> Settings
+            </a>
+            <hr style="margin: 5px 0;">
+            <a href="#" class="dropdown-item logout-btn" onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard">
+    <div class="welcome-section">
+      <h1>Welcome back, <span id="welcome-name">User</span>! 👋</h1>
+      <p>Here's your mental wellness journey at a glance</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon primary">
+          <i class="fas fa-comments"></i>
+        </div>
+        <h3 id="total-messages">0</h3>
+        <p>AI Chat Messages</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon secondary">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3 id="total-sessions">0</h3>
+        <p>Total Sessions</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon warning">
+          <i class="fas fa-smile"></i>
+        </div>
+        <h3 id="mood-entries">0</h3>
+        <p>Mood Entries</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon success">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h3 id="days-active">1</h3>
+        <p>Days Active</p>
+      </div>
+    </div>
+
+    <h2 style="margin-bottom: 20px; color: var(--secondary);">Quick Actions</h2>
+    <div class="quick-actions">
+      <div class="action-card">
+        <i class="fas fa-brain"></i>
+        <h3>Chat with AI Assistant</h3>
+        <p>Get instant mental health support and guidance</p>
+        <a href="ai-assistant.html" class="btn">Start Chat</a>
+      </div>
+
+      <div class="action-card">
+        <i class="fas fa-smile-beam"></i>
+        <h3>Track Your Mood</h3>
+        <p>Log how you're feeling today</p>
+        <button class="btn" onclick="trackMood()">Log Mood</button>
+      </div>
+
+      <div class="action-card">
+        <i class="fas fa-book-open"></i>
+        <h3>Wellness Library</h3>
+        <p>Explore mental health resources</p>
+        <a href="index.html#self" class="btn">Explore</a>
+      </div>
+    </div>
+
+    <div class="recent-activity">
+      <h2>Recent Activity</h2>
+      <div id="activity-list">
+        <p style="color: var(--text-light); text-align: center; padding: 20px;">
+          No recent activity yet. Start using Therapio to see your progress!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    let currentUser = null;
+    let auth, db;
+
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Initialize Firebase
+      if (initializeFirebase()) {
+        auth = firebase.auth();
+        db = firebase.firestore();
+
+        // Check authentication state
+        auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            currentUser = user;
+            await loadUserData();
+            await loadStats();
+            await loadRecentActivity();
+          } else {
+            // Not logged in, redirect to login
+            window.location.href = 'login.html';
+          }
+        });
+      } else {
+        // Firebase not initialized, check localStorage
+        const userData = localStorage.getItem('therapio_user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          document.getElementById('user-name').textContent = user.name;
+          document.getElementById('user-avatar').src = user.avatar;
+          document.getElementById('welcome-name').textContent = user.name;
+        } else {
+          window.location.href = 'login.html';
+        }
+      }
+    });
+
+    async function loadUserData() {
+      try {
+        const userDoc = await db.collection('users').doc(currentUser.uid).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          document.getElementById('user-name').textContent = userData.name;
+          document.getElementById('user-avatar').src = userData.avatar;
+          document.getElementById('welcome-name').textContent = userData.name;
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    }
+
+    async function loadStats() {
+      try {
+        // Get chat messages count
+        const messagesSnapshot = await db.collection('users')
+          .doc(currentUser.uid)
+          .collection('chatHistory')
+          .get();
+        document.getElementById('total-messages').textContent = messagesSnapshot.size;
+
+        // Get sessions count
+        const sessionsSnapshot = await db.collection('users')
+          .doc(currentUser.uid)
+          .collection('sessions')
+          .get();
+        document.getElementById('total-sessions').textContent = sessionsSnapshot.size;
+
+        // Get mood entries count
+        const moodSnapshot = await db.collection('users')
+          .doc(currentUser.uid)
+          .collection('moodTracker')
+          .get();
+        document.getElementById('mood-entries').textContent = moodSnapshot.size;
+
+        // Calculate days active
+        const userDoc = await db.collection('users').doc(currentUser.uid).get();
+        if (userDoc.exists) {
+          const createdAt = userDoc.data().createdAt;
+          if (createdAt) {
+            const daysActive = Math.floor((Date.now() - createdAt.toDate()) / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById('days-active').textContent = daysActive;
+          }
+        }
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    async function loadRecentActivity() {
+      try {
+        const activityList = document.getElementById('activity-list');
+        const activities = [];
+
+        // Get recent chat messages
+        const messagesSnapshot = await db.collection('users')
+          .doc(currentUser.uid)
+          .collection('chatHistory')
+          .orderBy('timestamp', 'desc')
+          .limit(5)
+          .get();
+
+        messagesSnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.timestamp) {
+            activities.push({
+              date: data.timestamp.toDate(),
+              text: `Chatted with AI Assistant`,
+              icon: 'fa-comments'
+            });
+          }
+        });
+
+        // Get recent mood entries
+        const moodSnapshot = await db.collection('users')
+          .doc(currentUser.uid)
+          .collection('moodTracker')
+          .orderBy('timestamp', 'desc')
+          .limit(3)
+          .get();
+
+        moodSnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.timestamp) {
+            activities.push({
+              date: data.timestamp.toDate(),
+              text: `Logged mood: ${data.mood}`,
+              icon: 'fa-smile'
+            });
+          }
+        });
+
+        // Sort by date
+        activities.sort((a, b) => b.date - a.date);
+
+        // Display activities
+        if (activities.length > 0) {
+          activityList.innerHTML = activities.slice(0, 5).map(activity => `
+            <div class="activity-item">
+              <div class="activity-date">${formatDate(activity.date)}</div>
+              <div class="activity-text">
+                <i class="fas ${activity.icon}"></i> ${activity.text}
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Error loading recent activity:', error);
+      }
+    }
+
+    function formatDate(date) {
+      const now = new Date();
+      const diff = now - date;
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(diff / 3600000);
+      const days = Math.floor(diff / 86400000);
+
+      if (minutes < 1) return 'Just now';
+      if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+      if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+      if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+      return date.toLocaleDateString();
+    }
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById('user-dropdown');
+      dropdown.classList.toggle('active');
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        const dropdown = document.getElementById('user-dropdown');
+        dropdown.classList.remove('active');
+      }
+    });
+
+    async function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        try {
+          if (auth) {
+            await auth.signOut();
+          }
+          localStorage.removeItem('therapio_user');
+          localStorage.removeItem('userId');
+          window.location.href = 'index.html';
+        } catch (error) {
+          console.error('Logout error:', error);
+          alert('Error logging out. Please try again.');
+        }
+      }
+    }
+
+    function showProfile() {
+      alert('Profile page coming soon!');
+    }
+
+    function showSettings() {
+      alert('Settings page coming soon!');
+    }
+
+    function trackMood() {
+      const mood = prompt('How are you feeling today?\n\nOptions: happy, sad, anxious, calm, stressed, energetic');
+      if (mood) {
+        const intensity = prompt('On a scale of 1-10, how intense is this feeling?');
+        if (intensity && intensity >= 1 && intensity <= 10) {
+          saveMood(mood.toLowerCase(), parseInt(intensity));
+        }
+      }
+    }
+
+    async function saveMood(mood, intensity) {
+      try {
+        await database.saveMoodEntry(currentUser.uid, {
+          mood: mood,
+          intensity: intensity,
+          notes: ''
+        });
+        alert('Mood logged successfully!');
+        loadStats();
+        loadRecentActivity();
+      } catch (error) {
+        console.error('Error saving mood:', error);
+        alert('Failed to save mood. Please try again.');
+      }
+    }
+  </script>
+</body>
+</html>
