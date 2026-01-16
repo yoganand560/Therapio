@@ -879,12 +879,12 @@
       console.log(`🔐 ${provider} login initiated`);
       
       // Show account selection dialog
-      const providerName = provider.charAt(0).toUpperCase() + provider.slice(0);
+      const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
       const accounts = [
         `personal@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
         `work@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
-        `${currentUser || 'user'}@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
-        `demo${Date.now() % 100}@${provider === 'google' ? 'gmail' : 'outlook'}.com`
+        `user@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
+        `demo${Math.floor(Math.random() * 100)}@${provider === 'google' ? 'gmail' : 'outlook'}.com`
       ];
 
       let message = `🔐 Select your ${providerName} account:\n\n`;
@@ -895,13 +895,13 @@
 
       const selection = prompt(message);
       
-      if (!selection || selection === '0') {
+      if (!selection || selection === '0' || selection === null) {
         console.log('Social login cancelled');
         return;
       }
 
       const index = parseInt(selection) - 1;
-      if (index < 0 || index >= accounts.length) {
+      if (index < 0 || index >= accounts.length || isNaN(index)) {
         showError('Invalid selection. Please try again.');
         return;
       }
@@ -910,7 +910,12 @@
       console.log(`Selected account: ${selectedEmail}`);
       
       const allSocialBtns = document.querySelectorAll('.social-btn');
-      allSocialBtns.forEach(btn => btn.disabled = true);
+      const originalContent = {};
+      
+      allSocialBtns.forEach(btn => {
+        originalContent[btn.id] = btn.innerHTML;
+        btn.disabled = true;
+      });
       
       const clickedBtn = document.getElementById(`${provider}-login`) || document.getElementById(`${provider}-register`);
       if (clickedBtn) {
@@ -942,14 +947,11 @@
         console.error('❌ Social login error:', error);
         showError(error.message || 'Social login failed. Please try again.');
         
+        // Restore buttons
         allSocialBtns.forEach(btn => {
           btn.disabled = false;
-          if (btn.id.includes('google')) {
-            btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> ' + 
-                           (btn.id.includes('login') ? 'Continue with Google' : 'Sign up with Google');
-          } else if (btn.id.includes('microsoft')) {
-            btn.innerHTML = '<img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft"> ' +
-                           (btn.id.includes('login') ? 'Continue with Microsoft' : 'Sign up with Microsoft');
+          if (originalContent[btn.id]) {
+            btn.innerHTML = originalContent[btn.id];
           }
         });
       }
