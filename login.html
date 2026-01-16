@@ -299,6 +299,83 @@
       margin-right: 10px;
     }
 
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 25px 0;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .divider span {
+      padding: 0 15px;
+    }
+
+    .social-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .social-btn {
+      width: 100%;
+      padding: 13px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      background: white;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .social-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .social-btn i {
+      font-size: 1.2rem;
+    }
+
+    .social-btn.google {
+      border-color: #DB4437;
+      color: #DB4437;
+    }
+
+    .social-btn.google:hover {
+      background: #DB4437;
+      color: white;
+      border-color: #DB4437;
+    }
+
+    .social-btn.microsoft {
+      border-color: #00A4EF;
+      color: #00A4EF;
+    }
+
+    .social-btn.microsoft:hover {
+      background: #00A4EF;
+      color: white;
+      border-color: #00A4EF;
+    }
+
     .switch-form {
       text-align: center;
       color: var(--text-light);
@@ -412,6 +489,22 @@
 
       <!-- Login Form -->
       <form id="login-form" class="auth-form active">
+        <!-- Social Login Options -->
+        <div class="social-auth">
+          <button type="button" class="social-btn google" id="google-login">
+            <i class="fab fa-google"></i>
+            Continue with Google
+          </button>
+          <button type="button" class="social-btn microsoft" id="microsoft-login">
+            <i class="fab fa-microsoft"></i>
+            Continue with Microsoft
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
         <div class="form-group">
           <label for="login-email">
             <i class="fas fa-envelope"></i> Email Address
@@ -448,6 +541,22 @@
 
       <!-- Register Form -->
       <form id="register-form" class="auth-form">
+        <!-- Social Registration Options -->
+        <div class="social-auth">
+          <button type="button" class="social-btn google" id="google-register">
+            <i class="fab fa-google"></i>
+            Sign up with Google
+          </button>
+          <button type="button" class="social-btn microsoft" id="microsoft-register">
+            <i class="fab fa-microsoft"></i>
+            Sign up with Microsoft
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
         <div class="form-group">
           <label for="register-name">
             <i class="fas fa-user"></i> Full Name
@@ -584,6 +693,128 @@
       togglePasswordVisibility(togglePassword, loginPassword);
       togglePasswordVisibility(toggleRegisterPassword, registerPassword);
       
+      // Social Authentication Handlers
+      async function handleSocialAuth(providerType) {
+        try {
+          let provider;
+          
+          if (providerType === 'google') {
+            provider = new firebase.auth.GoogleAuthProvider();
+          } else if (providerType === 'microsoft') {
+            provider = new firebase.auth.OAuthProvider('microsoft.com');
+          }
+          
+          // Show loading state
+          const allSocialBtns = document.querySelectorAll('.social-btn');
+          allSocialBtns.forEach(btn => {
+            btn.disabled = true;
+            if (btn.id.includes(providerType)) {
+              btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+            }
+          });
+          
+          // Sign in with popup
+          const result = await auth.signInWithPopup(provider);
+          const user = result.user;
+          
+          // Check if user document exists
+          const userDoc = await db.collection('users').doc(user.uid).get();
+          
+          if (!userDoc.exists) {
+            // New user - create profile
+            const avatarUrl = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName) + '&background=10b981&color=fff';
+            
+            await db.collection('users').doc(user.uid).set({
+              name: user.displayName || user.email.split('@')[0],
+              email: user.email,
+              avatar: avatarUrl,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+              authProvider: providerType,
+              preferences: {
+                notifications: true,
+                theme: 'light',
+                emailUpdates: true
+              },
+              stats: {
+                totalSessions: 0,
+                totalMessages: 0,
+                moodEntries: 0
+              }
+            });
+          } else {
+            // Existing user - update last login
+            await db.collection('users').doc(user.uid).update({
+              lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
+          
+          // Get final user data
+          const finalUserDoc = await db.collection('users').doc(user.uid).get();
+          const userData = finalUserDoc.data();
+          
+          // Store user session
+          localStorage.setItem('therapio_user', JSON.stringify({
+            uid: user.uid,
+            name: userData.name || user.displayName,
+            email: user.email,
+            loggedIn: true,
+            avatar: userData.avatar || user.photoURL
+          }));
+          
+          // Redirect to dashboard
+          window.location.href = 'dashboard.html';
+          
+        } catch (error) {
+          console.error('Social auth error:', error);
+          
+          let errorMessage = 'Authentication failed. Please try again.';
+          
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = 'Sign-in was cancelled. Please try again.';
+          } else if (error.code === 'auth/account-exists-with-different-credential') {
+            errorMessage = 'An account already exists with this email using a different sign-in method.';
+          } else if (error.code === 'auth/popup-blocked') {
+            errorMessage = 'Pop-up was blocked. Please allow pop-ups for this site.';
+          }
+          
+          alert(errorMessage);
+          
+          // Re-enable buttons
+          const allSocialBtns = document.querySelectorAll('.social-btn');
+          allSocialBtns.forEach(btn => {
+            btn.disabled = false;
+            if (btn.id.includes('google')) {
+              btn.innerHTML = '<i class="fab fa-google"></i> ' + (btn.id.includes('login') ? 'Continue with Google' : 'Sign up with Google');
+            } else if (btn.id.includes('microsoft')) {
+              btn.innerHTML = '<i class="fab fa-microsoft"></i> ' + (btn.id.includes('login') ? 'Continue with Microsoft' : 'Sign up with Microsoft');
+            }
+          });
+        }
+      }
+      
+      // Social auth button listeners
+      const googleLoginBtn = document.getElementById('google-login');
+      const googleRegisterBtn = document.getElementById('google-register');
+      const microsoftLoginBtn = document.getElementById('microsoft-login');
+      const microsoftRegisterBtn = document.getElementById('microsoft-register');
+      
+      if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', () => handleSocialAuth('google'));
+      }
+      
+      if (googleRegisterBtn) {
+        googleRegisterBtn.addEventListener('click', () => handleSocialAuth('google'));
+      }
+      
+      if (microsoftLoginBtn) {
+        microsoftLoginBtn.addEventListener('click', () => handleSocialAuth('microsoft'));
+      }
+      
+      if (microsoftRegisterBtn) {
+        microsoftRegisterBtn.addEventListener('click', () => handleSocialAuth('microsoft'));
+      }
+      
       // Form submission
       const loginForm = document.getElementById('login-form');
       const registerForm = document.getElementById('register-form');
@@ -644,7 +875,7 @@
             
             alert(errorMessage);
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Login';
+            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
           }
         });
       }

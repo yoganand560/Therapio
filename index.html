@@ -757,6 +757,11 @@
   </div>
 </nav>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+
 <!-- ================= HERO ================= -->
 <section class="hero" id="home">
   <div class="hero-content animate-fade-in">
@@ -1016,15 +1021,20 @@
 </body>
 
 <script>
-  // Check if user is logged in
+  // Check if user is logged in with Firebase Authentication
   document.addEventListener("DOMContentLoaded", function() {
-    const userData = localStorage.getItem("therapio_user");
-    if (userData) {
-      const user = JSON.parse(userData);
-      const authLink = document.getElementById("auth-link");
-      if (authLink && user.loggedIn) {
-        authLink.innerHTML = "<a class=\"btn\" href=\"dashboard.html\"><i class=\"fas fa-dashboard\"></i> My Dashboard</a>";
-      }
+    // Wait for Firebase to initialize
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+      firebase.auth().onAuthStateChanged((user) => {
+        const authLink = document.getElementById("auth-link");
+        if (user && authLink) {
+          // User is signed in - show dashboard link
+          authLink.innerHTML = '<a class="btn" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>';
+        } else {
+          // User is not signed in - show login/register link
+          authLink.innerHTML = '<a class="btn" href="login.html">Login/Register</a>';
+        }
+      });
     }
   });
 </script>
