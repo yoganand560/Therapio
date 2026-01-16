@@ -274,6 +274,36 @@
       width: 16px;
       height: 16px;
       accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .checkbox-group {
+      margin-bottom: 20px;
+    }
+
+    .checkbox-group .checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .checkbox-group .checkbox input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .checkbox-group .checkbox span {
+      line-height: 1.5;
+    }
+
+    .checkbox-group .checkbox a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .checkbox-group .checkbox a:hover {
+      color: var(--secondary);
     }
 
     .forgot-link {
@@ -328,7 +358,7 @@
 
     .social-btn {
       width: 100%;
-      padding: 13px;
+      padding: 13px 20px;
       border: 2px solid #e2e8f0;
       border-radius: var(--radius);
       background: white;
@@ -341,39 +371,40 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
+      position: relative;
     }
 
     .social-btn:hover {
-      border-color: var(--primary);
-      background: #f8fafc;
       transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    .social-btn i {
-      font-size: 1.2rem;
+    .social-btn img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
     }
 
     .social-btn.google {
-      border-color: #DB4437;
-      color: #DB4437;
+      border-color: #dadce0;
+      color: #3c4043;
     }
 
     .social-btn.google:hover {
-      background: #DB4437;
-      color: white;
-      border-color: #DB4437;
+      background: #f8f9fa;
+      border-color: #dadce0;
+      box-shadow: 0 1px 3px rgba(60,64,67,0.3);
     }
 
     .social-btn.microsoft {
-      border-color: #00A4EF;
-      color: #00A4EF;
+      border-color: #8c8c8c;
+      color: #5e5e5e;
     }
 
     .social-btn.microsoft:hover {
-      background: #00A4EF;
-      color: white;
-      border-color: #00A4EF;
+      background: #f3f2f1;
+      border-color: #8c8c8c;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
 
     .switch-form {
@@ -492,11 +523,11 @@
         <!-- Social Login Options -->
         <div class="social-auth">
           <button type="button" class="social-btn google" id="google-login">
-            <i class="fab fa-google"></i>
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
             Continue with Google
           </button>
           <button type="button" class="social-btn microsoft" id="microsoft-login">
-            <i class="fab fa-microsoft"></i>
+            <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft">
             Continue with Microsoft
           </button>
         </div>
@@ -544,11 +575,11 @@
         <!-- Social Registration Options -->
         <div class="social-auth">
           <button type="button" class="social-btn google" id="google-register">
-            <i class="fab fa-google"></i>
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
             Sign up with Google
           </button>
           <button type="button" class="social-btn microsoft" id="microsoft-register">
-            <i class="fab fa-microsoft"></i>
+            <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft">
             Sign up with Microsoft
           </button>
         </div>
@@ -629,30 +660,36 @@
       // Check if Firebase SDK is loaded
       if (typeof firebase === 'undefined') {
         console.error('❌ Firebase SDK not loaded! Check your internet connection.');
-        alert('Firebase SDK failed to load. Please check your internet connection and refresh the page.');
-        return;
+        alert('⚠️ Firebase SDK not loaded.\n\nThe authentication system requires Firebase. Please check:\n1. Your internet connection\n2. That you can access Google CDN\n3. Try refreshing the page\n\nYou can still use the form, but registration will fail until Firebase is configured.');
+        // Don't return - let the form still be interactive for testing
       }
       
+      let firebaseReady = false;
+      
       // Initialize Firebase
-      if (initializeFirebase()) {
-        auth = firebase.auth();
-        db = firebase.firestore();
-        console.log('✅ Firebase initialized successfully');
-        
-        // Check if user is already logged in
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            console.log('User already logged in:', user.email);
-            // User is signed in, redirect to dashboard
-            window.location.href = 'dashboard.html';
-          } else {
-            console.log('No user logged in');
-          }
-        });
+      if (typeof firebase !== 'undefined' && typeof initializeFirebase === 'function') {
+        firebaseReady = initializeFirebase();
+        if (firebaseReady) {
+          auth = firebase.auth();
+          db = firebase.firestore();
+          console.log('✅ Firebase initialized successfully');
+          
+          // Check if user is already logged in
+          auth.onAuthStateChanged((user) => {
+            if (user) {
+              console.log('User already logged in:', user.email);
+              // User is signed in, redirect to dashboard
+              window.location.href = 'dashboard.html';
+            } else {
+              console.log('No user logged in');
+            }
+          });
+        } else {
+          console.error('❌ Firebase initialization failed!');
+          alert('⚠️ Firebase Configuration Error\n\nFirebase is not properly configured. To fix this:\n\n1. Open test-firebase.html to diagnose the issue\n2. Follow FIREBASE_SETUP_INSTRUCTIONS.md\n3. Update firebase-config.js with your credentials\n\nRegistration will not work until this is fixed.');
+        }
       } else {
-        console.error('❌ Firebase initialization failed!');
-        alert('Firebase configuration error. Please check firebase-config.js file.');
-        return;
+        console.warn('⚠️ Firebase config not found');
       }
       
       // Tab switching
@@ -802,9 +839,9 @@
           allSocialBtns.forEach(btn => {
             btn.disabled = false;
             if (btn.id.includes('google')) {
-              btn.innerHTML = '<i class="fab fa-google"></i> ' + (btn.id.includes('login') ? 'Continue with Google' : 'Sign up with Google');
+              btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> ' + (btn.id.includes('login') ? 'Continue with Google' : 'Sign up with Google');
             } else if (btn.id.includes('microsoft')) {
-              btn.innerHTML = '<i class="fab fa-microsoft"></i> ' + (btn.id.includes('login') ? 'Continue with Microsoft' : 'Sign up with Microsoft');
+              btn.innerHTML = '<img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft"> ' + (btn.id.includes('login') ? 'Continue with Microsoft' : 'Sign up with Microsoft');
             }
           });
         }
@@ -839,9 +876,20 @@
       if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
           e.preventDefault();
+          console.log('🔐 Login form submitted');
+          
+          // Check if Firebase is ready
+          if (!firebaseReady || typeof auth === 'undefined' || typeof db === 'undefined') {
+            console.error('❌ Firebase not ready');
+            alert('⚠️ Firebase Not Configured\n\nLogin requires Firebase to be set up.\n\nPlease:\n1. Open test-firebase.html to diagnose\n2. Follow FIREBASE_SETUP_INSTRUCTIONS.md\n3. Update firebase-config.js with your credentials');
+            return;
+          }
+          
           const email = document.getElementById('login-email').value;
           const password = document.getElementById('login-password').value;
           const submitBtn = loginForm.querySelector('button[type="submit"]');
+          
+          console.log('Login attempt:', { email });
           
           // Simple validation
           if (!email || !password) {
@@ -901,6 +949,13 @@
         registerForm.addEventListener('submit', async function(e) {
           e.preventDefault();
           console.log('📝 Registration form submitted');
+          
+          // Check if Firebase is ready
+          if (!firebaseReady || typeof auth === 'undefined' || typeof db === 'undefined') {
+            console.error('❌ Firebase not ready');
+            alert('⚠️ Firebase Not Configured\n\nRegistration requires Firebase to be set up.\n\nPlease:\n1. Open test-firebase.html to diagnose\n2. Follow FIREBASE_SETUP_INSTRUCTIONS.md\n3. Update firebase-config.js with your credentials');
+            return;
+          }
           
           const name = document.getElementById('register-name').value;
           const email = document.getElementById('register-email').value;
