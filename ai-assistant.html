@@ -375,9 +375,14 @@
       <a href="index.html" class="logo">
         <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio Logo">
       </a>
-      <a href="index.html" class="btn">
-        <i class="fas fa-arrow-left"></i> Back to Home
-      </a>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <button onclick="clearChat()" class="btn" style="background: #ef4444;">
+          <i class="fas fa-trash"></i> Clear Chat
+        </button>
+        <a href="index.html" class="btn">
+          <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -419,9 +424,34 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
   <script>
     // Using the provided API key
     const API_KEY = 'AIzaSyBcRPKKNVCBqmd4vZl3GeRNHCSoHyedgPU';
+    
+    // Initialize Firebase and get current user
+    let currentUser = null;
+    let sessionStartTime = Date.now();
+    
+    // Initialize Firebase when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      initializeFirebase();
+      
+      // Get or create anonymous user ID
+      currentUser = localStorage.getItem('userId');
+      if (!currentUser) {
+        currentUser = 'user_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('userId', currentUser);
+      }
+      
+      // Load chat history if available
+      loadChatHistory();
+    });
 
     function handleEnter(event) {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -454,6 +484,11 @@
 
       // Add user message
       addMessage(message, 'user');
+      
+      // Save user message to database
+      if (typeof database !== 'undefined') {
+        database.saveChatMessage(currentUser, { text: message, sender: 'user' });
+      }
 
       // Show typing indicator
       const typingIndicator = showTypingIndicator();
@@ -467,6 +502,11 @@
         
         // Add assistant response
         addMessage(response, 'assistant');
+        
+        // Save assistant response to database
+        if (typeof database !== 'undefined') {
+          database.saveChatMessage(currentUser, { text: response, sender: 'assistant' });
+        }
         
       } catch (error) {
         typingIndicator.remove();
@@ -523,7 +563,7 @@
       }
     }
 
-    function addMessage(text, sender) {
+    function addMessage(text, sender, showTime = true) {
       const messagesContainer = document.getElementById('messages-container');
       const messageDiv = document.createElement('div');
       messageDiv.className = `message ${sender}`;
@@ -536,10 +576,12 @@
       content.className = 'message-content';
       content.innerHTML = text.replace(/\n/g, '<br>');
       
-      const time = document.createElement('div');
-      time.className = 'message-time';
-      time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      content.appendChild(time);
+      if (showTime) {
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        content.appendChild(time);
+      }
       
       messageDiv.appendChild(avatar);
       messageDiv.appendChild(content);
@@ -578,6 +620,55 @@
     function scrollToBottom() {
       const container = document.getElementById('messages-container');
       container.scrollTop = container.scrollHeight;
+    }
+
+    // Load chat history from database
+    async function loadChatHistory() {
+      if (typeof database === 'undefined') return;
+      
+      const result = await database.getChatHistory(currentUser, 20);
+      if (result.success && result.data.length > 0) {
+        // Remove welcome message
+        const welcomeMsg = document.querySelector('.welcome-message');
+        if (welcomeMsg) {
+          welcomeMsg.remove();
+        }
+        
+        // Display previous messages
+        result.data.forEach(msg => {
+          if (msg.message && msg.sender) {
+            addMessage(msg.message, msg.sender, false);
+          }
+        });
+        
+        scrollToBottom();
+      }
+    }
+    
+    // Clear chat history
+    async function clearChat() {
+      if (confirm('Are you sure you want to clear all chat history?')) {
+        if (typeof database !== 'undefined') {
+          await database.clearChatHistory(currentUser);
+        }
+        
+        // Clear UI
+        const messagesContainer = document.getElementById('messages-container');
+        messagesContainer.innerHTML = `
+          <div class="welcome-message">
+            <i class="fas fa-comments"></i>
+            <h3>Welcome! I'm your AI Mental Health Assistant 🤖</h3>
+            <p>I'm here to provide support, listen, and help you navigate your mental wellness journey. How can I help you today?</p>
+            
+            <div class="suggested-prompts">
+              <button class="prompt-btn" onclick="sendPrompt('I\\'m feeling anxious today')">I'm feeling anxious today</button>
+              <button class="prompt-btn" onclick="sendPrompt('Can you help me with stress management?')">Help with stress management</button>
+              <button class="prompt-btn" onclick="sendPrompt('I need some motivation')">I need some motivation</button>
+              <button class="prompt-btn" onclick="sendPrompt('Tell me about mindfulness')">Tell me about mindfulness</button>
+            </div>
+          </div>
+        `;
+      }
     }
 
     // Auto-resize textarea
