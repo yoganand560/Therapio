@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile – Therapio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-light: #d1fae5;
+      --secondary: #0f766e;
+      --secondary-dark: #115e59;
+      --background: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --gradient: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 40px rgba(15, 118, 110, 0.12);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav {
+      background: white;
+      box-shadow: var(--shadow-sm);
+      padding: 15px 5%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    .btn {
+      background: var(--gradient);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--secondary);
+      border: 2px solid var(--primary);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-light);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 5%;
+    }
+
+    .page-header {
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      color: var(--secondary);
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    /* Profile Card */
+    .profile-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid var(--background);
+    }
+
+    .avatar-section {
+      text-align: center;
+    }
+
+    .avatar-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 20px;
+    }
+
+    .avatar-container img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--primary);
+      object-fit: cover;
+    }
+
+    .avatar-upload-btn {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .avatar-upload-btn:hover {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    #avatar-input {
+      display: none;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-info h2 {
+      font-size: 2rem;
+      color: var(--secondary);
+      margin-bottom: 10px;
+    }
+
+    .profile-info p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: var(--primary-light);
+      color: var(--secondary);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* Avatar Options */
+    .avatar-options {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--background);
+      border-radius: var(--radius);
+    }
+
+    .avatar-options.show {
+      display: block;
+    }
+
+    .avatar-options h4 {
+      margin-bottom: 15px;
+      color: var(--secondary);
+    }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .avatar-option {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .avatar-option:hover {
+      border-color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .avatar-option.selected {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .url-input-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .url-input-group input {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      font-size: 1rem;
+    }
+
+    .url-input-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Form Sections */
+    .form-section {
+      margin-bottom: 30px;
+    }
+
+    .form-section h3 {
+      color: var(--secondary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-section h3 i {
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .success-message,
+    .error-message {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message {
+      background: var(--primary-light);
+      color: var(--secondary-dark);
+      border-left: 4px solid var(--primary);
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 4px solid #dc2626;
+    }
+
+    .success-message.show,
+    .error-message.show {
+      display: block;
+    }
+
+    /* Linked Accounts */
+    .linked-accounts {
+      display: grid;
+      gap: 15px;
+    }
+
+    .account-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: var(--background);
+      border-radius: var(--radius);
+      border: 2px solid transparent;
+    }
+
+    .account-item.linked {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .account-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .account-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .account-details h4 {
+      margin-bottom: 3px;
+      color: var(--secondary);
+    }
+
+    .account-details p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .link-btn {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      }
+
+      .avatar-option {
+        width: 60px;
+        height: 60px;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio">
+      </a>
+      <a href="dashboard-new.html" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+      <p>Manage your personal information and preferences</p>
+    </div>
+
+    <div id="success-msg" class="success-message"></div>
+    <div id="error-msg" class="error-message"></div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar-section">
+          <div class="avatar-container">
+            <img id="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff&size=200" alt="Profile Picture">
+            <label for="avatar-input" class="avatar-upload-btn">
+              <i class="fas fa-camera"></i>
+            </label>
+            <input type="file" id="avatar-input" accept="image/*">
+          </div>
+          <button class="btn btn-secondary" onclick="toggleAvatarOptions()">
+            <i class="fas fa-images"></i> Choose Avatar
+          </button>
+          
+          <div id="avatar-options" class="avatar-options">
+            <h4>Select a pre-made avatar:</h4>
+            <div class="avatar-grid" id="avatar-grid">
+              <!-- Generated dynamically -->
+            </div>
+            <h4>Or enter image URL:</h4>
+            <div class="url-input-group">
+              <input type="url" id="avatar-url" placeholder="https://example.com/avatar.jpg">
+              <button class="btn" onclick="setCustomAvatar()">Set</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-info">
+          <h2 id="profile-name">User Name</h2>
+          <p><i class="fas fa-envelope"></i> <span id="profile-email">user@example.com</span></p>
+          <p><i class="fas fa-calendar"></i> Joined <span id="profile-joined">January 2026</span></p>
+          <span class="badge" id="profile-provider">Email Account</span>
+        </div>
+      </div>
+
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h3><i class="fas fa-id-card"></i> Personal Information</h3>
+        <div class="form-group">
+          <label for="full-name">Full Name</label>
+          <input type="text" id="full-name" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" placeholder="Tell us about yourself..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number (Optional)</label>
+          <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+        </div>
+      </div>
+
+      <!-- Linked Accounts -->
+      <div class="form-section">
+        <h3><i class="fas fa-link"></i> Linked Accounts</h3>
+        <div class="linked-accounts">
+          <div class="account-item" id="google-account">
+            <div class="account-info">
+              <div class="account-icon">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="30" alt="Google">
+              </div>
+              <div class="account-details">
+                <h4>Google</h4>
+                <p id="google-email">Not connected</p>
+              </div>
+            </div>
+            <button class="btn link-btn" onclick="linkGoogleAccount()">
+              <i class="fas fa-link"></i> Link
+            </button>
+          </div>
+
+          <div class="account-item" id="microsoft-account">
+            <div class="account-info">
+              <div class="account-icon">
+                <img src="https://learn.microsoft.com/en-us/media/logos/logo-ms-social.png" width="30" alt="Microsoft">
+              </div>
+              <div class="account-details">
+                <h4>Microsoft</h4>
+                <p id="microsoft-email">Not connected</p>
+              </div>
+            </div>
+            <button class="btn link-btn" onclick="linkMicrosoftAccount()">
+              <i class="fas fa-link"></i> Link
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Settings -->
+      <div class="form-section">
+        <h3><i class="fas fa-shield-alt"></i> Security</h3>
+        <div class="form-group">
+          <label for="current-password">Current Password</label>
+          <input type="password" id="current-password" placeholder="Enter current password">
+        </div>
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" placeholder="Enter new password">
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm New Password</label>
+          <input type="password" id="confirm-password" placeholder="Confirm new password">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" onclick="saveProfile()">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+        <button class="btn btn-secondary" onclick="window.location.href='dashboard-new.html'">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth-system.js"></script>
+  <script>
+    console.log('👤 Profile page loading...');
+
+    let currentUser = therapioAuth.getCurrentUser();
+
+    if (!currentUser) {
+      console.log('❌ Not logged in');
+      window.location.href = 'login-new.html';
+    } else {
+      loadProfile();
+    }
+
+    function loadProfile() {
+      console.log('📖 Loading profile...');
+      
+      // Set profile info
+      document.getElementById('profile-name').textContent = currentUser.name;
+      document.getElementById('profile-email').textContent = currentUser.email;
+      document.getElementById('profile-avatar').src = currentUser.avatar;
+      document.getElementById('full-name').value = currentUser.name;
+      
+      // Set joined date
+      const joinedDate = currentUser.createdAt ? new Date(currentUser.createdAt) : new Date();
+      document.getElementById('profile-joined').textContent = joinedDate.toLocaleDateString('en-US', { 
+        month: 'long', 
+        year: 'numeric' 
+      });
+
+      // Set provider badge
+      const providerBadge = document.getElementById('profile-provider');
+      if (currentUser.provider === 'google') {
+        providerBadge.textContent = '🔗 Google Account';
+        markAccountAsLinked('google', currentUser.email);
+      } else if (currentUser.provider === 'microsoft') {
+        providerBadge.textContent = '🔗 Microsoft Account';
+        markAccountAsLinked('microsoft', currentUser.email);
+      } else {
+        providerBadge.textContent = '📧 Email Account';
+      }
+
+      // Generate avatar options
+      generateAvatarOptions();
+
+      console.log('✅ Profile loaded');
+    }
+
+    function generateAvatarOptions() {
+      const grid = document.getElementById('avatar-grid');
+      const colors = ['10b981', 'ef4444', '3b82f6', 'f59e0b', '8b5cf6', 'ec4899', '06b6d4', 'f97316'];
+      const styles = ['adventurer', 'avataaars', 'bottts', 'fun-emoji', 'lorelei', 'micah', 'miniavs', 'personas'];
+      
+      // Generate UI Avatars
+      colors.forEach(color => {
+        const img = document.createElement('img');
+        const name = currentUser.name.replace(' ', '+');
+        img.src = `https://ui-avatars.com/api/?name=${name}&background=${color}&color=fff&size=200`;
+        img.className = 'avatar-option';
+        img.onclick = () => selectAvatar(img.src);
+        grid.appendChild(img);
+      });
+
+      // Add DiceBear avatars
+      styles.forEach(style => {
+        const img = document.createElement('img');
+        const seed = currentUser.email || 'user';
+        img.src = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`;
+        img.className = 'avatar-option';
+        img.onclick = () => selectAvatar(img.src);
+        grid.appendChild(img);
+      });
+    }
+
+    function toggleAvatarOptions() {
+      document.getElementById('avatar-options').classList.toggle('show');
+    }
+
+    function selectAvatar(url) {
+      // Remove previous selection
+      document.querySelectorAll('.avatar-option').forEach(img => {
+        img.classList.remove('selected');
+      });
+      
+      // Select new avatar
+      event.target.classList.add('selected');
+      document.getElementById('profile-avatar').src = url;
+      
+      showMessage('Avatar selected! Click "Save Changes" to update.', 'success');
+    }
+
+    function setCustomAvatar() {
+      const url = document.getElementById('avatar-url').value.trim();
+      
+      if (!url) {
+        showMessage('Please enter an image URL', 'error');
+        return;
+      }
+
+      // Test if URL is valid image
+      const img = new Image();
+      img.onload = () => {
+        document.getElementById('profile-avatar').src = url;
+        document.getElementById('avatar-url').value = '';
+        showMessage('Custom avatar set! Click "Save Changes" to update.', 'success');
+      };
+      img.onerror = () => {
+        showMessage('Invalid image URL. Please try another.', 'error');
+      };
+      img.src = url;
+    }
+
+    // Handle file upload
+    document.getElementById('avatar-input').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 5000000) {
+          showMessage('File too large. Maximum size is 5MB.', 'error');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('profile-avatar').src = event.target.result;
+          showMessage('Image uploaded! Click "Save Changes" to update.', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function saveProfile() {
+      console.log('💾 Saving profile...');
+      
+      const newName = document.getElementById('full-name').value.trim();
+      const newAvatar = document.getElementById('profile-avatar').src;
+      const bio = document.getElementById('bio').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (!newName) {
+        showMessage('Name cannot be empty', 'error');
+        return;
+      }
+
+      // Validate password change if provided
+      if (newPassword || confirmPassword) {
+        if (newPassword !== confirmPassword) {
+          showMessage('New passwords do not match', 'error');
+          return;
+        }
+        if (newPassword.length < 6) {
+          showMessage('New password must be at least 6 characters', 'error');
+          return;
+        }
+      }
+
+      // Update user data
+      try {
+        therapioAuth.updateProfile({
+          name: newName,
+          avatar: newAvatar,
+          bio: bio,
+          phone: phone
+        });
+
+        if (newPassword) {
+          therapioAuth.changePassword(newPassword);
+        }
+
+        currentUser = therapioAuth.getCurrentUser();
+        loadProfile();
+        
+        showMessage('✅ Profile updated successfully!', 'success');
+        
+        // Clear password fields
+        document.getElementById('current-password').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+
+        console.log('✅ Profile saved');
+      } catch (error) {
+        console.error('❌ Save error:', error);
+        showMessage('Error saving profile. Please try again.', 'error');
+      }
+    }
+
+    function linkGoogleAccount() {
+      showAccountSelector('google');
+    }
+
+    function linkMicrosoftAccount() {
+      showAccountSelector('microsoft');
+    }
+
+    function showAccountSelector(provider) {
+      const providerName = provider.charAt(0).toUpperCase() + provider.slice(0);
+      
+      // Simulate account selection
+      const accounts = [
+        `user1@${provider}.com`,
+        `user2@${provider}.com`,
+        `personal@${provider}.com`,
+        `work@${provider}.com`
+      ];
+
+      let message = `Select your ${providerName} account:\n\n`;
+      accounts.forEach((email, index) => {
+        message += `${index + 1}. ${email}\n`;
+      });
+      message += `\nEnter 1-4, or 0 to cancel:`;
+
+      const selection = prompt(message);
+      
+      if (selection && selection !== '0') {
+        const index = parseInt(selection) - 1;
+        if (index >= 0 && index < accounts.length) {
+          const selectedEmail = accounts[index];
+          markAccountAsLinked(provider, selectedEmail);
+          showMessage(`✅ Successfully linked ${providerName} account: ${selectedEmail}`, 'success');
+          
+          // Save linked account
+          therapioAuth.linkAccount(provider, selectedEmail);
+        } else {
+          showMessage('Invalid selection', 'error');
+        }
+      }
+    }
+
+    function markAccountAsLinked(provider, email) {
+      const accountItem = document.getElementById(`${provider}-account`);
+      accountItem.classList.add('linked');
+      document.getElementById(`${provider}-email`).textContent = email;
+      
+      const button = accountItem.querySelector('.link-btn');
+      button.innerHTML = '<i class="fas fa-check"></i> Linked';
+      button.onclick = () => unlinkAccount(provider);
+    }
+
+    function unlinkAccount(provider) {
+      if (confirm(`Are you sure you want to unlink your ${provider} account?`)) {
+        const accountItem = document.getElementById(`${provider}-account`);
+        accountItem.classList.remove('linked');
+        document.getElementById(`${provider}-email`).textContent = 'Not connected';
+        
+        const button = accountItem.querySelector('.link-btn');
+        button.innerHTML = '<i class="fas fa-link"></i> Link';
+        button.onclick = provider === 'google' ? linkGoogleAccount : linkMicrosoftAccount;
+        
+        showMessage(`${provider} account unlinked`, 'success');
+        
+        // Remove from auth system
+        therapioAuth.unlinkAccount(provider);
+      }
+    }
+
+    function showMessage(text, type) {
+      const successMsg = document.getElementById('success-msg');
+      const errorMsg = document.getElementById('error-msg');
+      
+      successMsg.classList.remove('show');
+      errorMsg.classList.remove('show');
+      
+      if (type === 'success') {
+        successMsg.innerHTML = `<i class="fas fa-check-circle"></i> ${text}`;
+        successMsg.classList.add('show');
+      } else {
+        errorMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${text}`;
+        errorMsg.classList.add('show');
+      }
+      
+      // Scroll to top to show message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        successMsg.classList.remove('show');
+        errorMsg.classList.remove('show');
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

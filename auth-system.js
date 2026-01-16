@@ -541,6 +541,127 @@ class TherapioAuth {
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .slice(0, limit);
   }
+
+  // Update user profile
+  updateProfile(updates) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      console.error('No user logged in');
+      return false;
+    }
+
+    const users = this.getAllUsers();
+    const user = users[currentUser.uid];
+
+    if (!user) {
+      console.error('User not found');
+      return false;
+    }
+
+    // Update allowed fields
+    if (updates.name) user.name = updates.name.trim();
+    if (updates.avatar) user.avatar = updates.avatar;
+    if (updates.bio !== undefined) user.bio = updates.bio;
+    if (updates.phone !== undefined) user.phone = updates.phone;
+
+    // Save changes
+    this.saveAllUsers(users);
+
+    // Update current session
+    const session = {
+      ...currentUser,
+      name: user.name,
+      avatar: user.avatar
+    };
+    localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(session));
+
+    console.log('✅ Profile updated');
+    return true;
+  }
+
+  // Change password
+  changePassword(newPassword) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      console.error('No user logged in');
+      return false;
+    }
+
+    if (newPassword.length < 6) {
+      console.error('Password too short');
+      return false;
+    }
+
+    const users = this.getAllUsers();
+    const user = users[currentUser.uid];
+
+    if (!user) {
+      console.error('User not found');
+      return false;
+    }
+
+    user.password = this.hashPassword(newPassword);
+    this.saveAllUsers(users);
+
+    console.log('✅ Password changed');
+    return true;
+  }
+
+  // Link external account
+  linkAccount(provider, email) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      console.error('No user logged in');
+      return false;
+    }
+
+    const users = this.getAllUsers();
+    const user = users[currentUser.uid];
+
+    if (!user) {
+      console.error('User not found');
+      return false;
+    }
+
+    if (!user.linkedAccounts) {
+      user.linkedAccounts = {};
+    }
+
+    user.linkedAccounts[provider] = {
+      email: email,
+      linkedAt: new Date().toISOString()
+    };
+
+    this.saveAllUsers(users);
+    console.log(`✅ ${provider} account linked`);
+    return true;
+  }
+
+  // Unlink external account
+  unlinkAccount(provider) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      console.error('No user logged in');
+      return false;
+    }
+
+    const users = this.getAllUsers();
+    const user = users[currentUser.uid];
+
+    if (!user) {
+      console.error('User not found');
+      return false;
+    }
+
+    if (user.linkedAccounts && user.linkedAccounts[provider]) {
+      delete user.linkedAccounts[provider];
+      this.saveAllUsers(users);
+      console.log(`✅ ${provider} account unlinked`);
+      return true;
+    }
+
+    return false;
+  }
 }
 
 // Create global instance

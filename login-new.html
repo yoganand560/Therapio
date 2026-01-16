@@ -878,6 +878,37 @@
     async function handleSocialLogin(provider) {
       console.log(`🔐 ${provider} login initiated`);
       
+      // Show account selection dialog
+      const providerName = provider.charAt(0).toUpperCase() + provider.slice(0);
+      const accounts = [
+        `personal@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
+        `work@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
+        `${currentUser || 'user'}@${provider === 'google' ? 'gmail' : 'outlook'}.com`,
+        `demo${Date.now() % 100}@${provider === 'google' ? 'gmail' : 'outlook'}.com`
+      ];
+
+      let message = `🔐 Select your ${providerName} account:\n\n`;
+      accounts.forEach((email, index) => {
+        message += `${index + 1}. ${email}\n`;
+      });
+      message += `\nEnter 1-4 to select an account, or click Cancel:`;
+
+      const selection = prompt(message);
+      
+      if (!selection || selection === '0') {
+        console.log('Social login cancelled');
+        return;
+      }
+
+      const index = parseInt(selection) - 1;
+      if (index < 0 || index >= accounts.length) {
+        showError('Invalid selection. Please try again.');
+        return;
+      }
+
+      const selectedEmail = accounts[index];
+      console.log(`Selected account: ${selectedEmail}`);
+      
       const allSocialBtns = document.querySelectorAll('.social-btn');
       allSocialBtns.forEach(btn => btn.disabled = true);
       
@@ -888,31 +919,23 @@
       
       hideMessages();
 
-      // Simulate social login with demo data
-      const demoUsers = {
-        google: {
-          name: 'Google User Demo',
-          email: `google.demo.${Date.now()}@gmail.com`,
-          avatar: 'https://ui-avatars.com/api/?name=Google+User&background=4285F4&color=fff&size=200'
-        },
-        microsoft: {
-          name: 'Microsoft User Demo',
-          email: `microsoft.demo.${Date.now()}@outlook.com`,
-          avatar: 'https://ui-avatars.com/api/?name=Microsoft+User&background=00A4EF&color=fff&size=200'
-        }
+      // Create user data with selected account
+      const userData = {
+        name: `${providerName} User`,
+        email: selectedEmail,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(providerName + ' User')}&background=${provider === 'google' ? '4285F4' : '00A4EF'}&color=fff&size=200`
       };
 
       try {
-        const userData = demoUsers[provider];
         console.log('Social login data:', userData);
         
         const user = await therapioAuth.socialLogin(provider, userData);
         console.log('✅ Social login successful!', user);
         
-        showSuccess(`🎉 Signed in with ${provider.charAt(0).toUpperCase() + provider.slice(1)}! Redirecting...`);
+        showSuccess(`🎉 Signed in as ${selectedEmail}! Redirecting...`);
         
         setTimeout(() => {
-          window.location.href = 'dashboard.html';
+          window.location.href = 'dashboard-new.html';
         }, 1500);
 
       } catch (error) {
