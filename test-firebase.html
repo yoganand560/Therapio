@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Connection Test - Therapio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+    
+    .test-item {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border-left: 5px solid #ddd;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .test-item.loading {
+      border-left-color: #ffc107;
+      background: #fff8e1;
+    }
+    
+    .test-item.success {
+      border-left-color: #4caf50;
+      background: #e8f5e9;
+    }
+    
+    .test-item.error {
+      border-left-color: #f44336;
+      background: #ffebee;
+    }
+    
+    .icon {
+      font-size: 1.5rem;
+      width: 30px;
+      text-align: center;
+    }
+    
+    .test-content {
+      flex: 1;
+    }
+    
+    .test-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .test-message {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .code {
+      background: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .alert {
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    
+    .alert.error {
+      background: #ffebee;
+      color: #c62828;
+      border: 2px solid #f44336;
+    }
+    
+    .alert.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 2px solid #4caf50;
+    }
+    
+    .instructions {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      color: #856404;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    
+    .instructions h3 {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .instructions ol {
+      margin-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 Firebase Connection Test</h1>
+    <p class="subtitle">Checking if your Firebase configuration is working...</p>
+    
+    <div id="test-results">
+      <div class="test-item loading" id="test-sdk">
+        <div class="icon">⏳</div>
+        <div class="test-content">
+          <div class="test-title">Loading Firebase SDK</div>
+          <div class="test-message">Checking if Firebase libraries are loaded...</div>
+        </div>
+      </div>
+      
+      <div class="test-item loading" id="test-config">
+        <div class="icon">⏳</div>
+        <div class="test-content">
+          <div class="test-title">Checking Configuration</div>
+          <div class="test-message">Verifying firebase-config.js settings...</div>
+        </div>
+      </div>
+      
+      <div class="test-item loading" id="test-init">
+        <div class="icon">⏳</div>
+        <div class="test-content">
+          <div class="test-title">Initializing Firebase</div>
+          <div class="test-message">Connecting to Firebase services...</div>
+        </div>
+      </div>
+      
+      <div class="test-item loading" id="test-auth">
+        <div class="icon">⏳</div>
+        <div class="test-content">
+          <div class="test-title">Testing Authentication</div>
+          <div class="test-message">Checking if Firebase Auth is accessible...</div>
+        </div>
+      </div>
+      
+      <div class="test-item loading" id="test-firestore">
+        <div class="icon">⏳</div>
+        <div class="test-content">
+          <div class="test-title">Testing Firestore</div>
+          <div class="test-message">Checking if Firestore database is accessible...</div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="alert-container"></div>
+    
+    <button class="btn" id="test-registration" style="display: none;">
+      ✅ All Tests Passed - Go to Registration
+    </button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    let testsPassed = 0;
+    const totalTests = 5;
+    
+    function updateTest(testId, status, message) {
+      const element = document.getElementById(testId);
+      element.className = `test-item ${status}`;
+      
+      const icon = element.querySelector('.icon');
+      const messageEl = element.querySelector('.test-message');
+      
+      if (status === 'success') {
+        icon.textContent = '✅';
+        testsPassed++;
+      } else if (status === 'error') {
+        icon.textContent = '❌';
+      } else {
+        icon.textContent = '⏳';
+      }
+      
+      messageEl.textContent = message;
+    }
+    
+    function showAlert(type, message) {
+      const container = document.getElementById('alert-container');
+      container.innerHTML = `<div class="alert ${type}">${message}</div>`;
+    }
+    
+    function showInstructions() {
+      const container = document.getElementById('alert-container');
+      container.innerHTML = `
+        <div class="instructions">
+          <h3>📋 What to do next:</h3>
+          <ol>
+            <li>Open <span class="code">FIREBASE_SETUP_INSTRUCTIONS.md</span> in this folder</li>
+            <li>Follow the step-by-step guide to create a Firebase project</li>
+            <li>Update <span class="code">firebase-config.js</span> with your Firebase credentials</li>
+            <li>Run this test page again to verify everything works</li>
+            <li>Once all tests pass, you can use the registration page!</li>
+          </ol>
+        </div>
+      `;
+    }
+    
+    async function runTests() {
+      console.log('🧪 Starting Firebase tests...');
+      
+      // Test 1: Firebase SDK loaded
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (typeof firebase !== 'undefined') {
+        updateTest('test-sdk', 'success', 'Firebase SDK loaded successfully');
+        console.log('✅ Test 1 passed: Firebase SDK loaded');
+      } else {
+        updateTest('test-sdk', 'error', 'Firebase SDK not found. Check internet connection.');
+        console.error('❌ Test 1 failed: Firebase SDK not loaded');
+        showAlert('error', '❌ Firebase SDK failed to load. Check your internet connection and refresh.');
+        return;
+      }
+      
+      // Test 2: Configuration check
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (typeof firebaseConfig !== 'undefined') {
+        if (firebaseConfig.apiKey === 'YOUR_FIREBASE_API_KEY') {
+          updateTest('test-config', 'error', 'Configuration not updated. Using placeholder values.');
+          console.error('❌ Test 2 failed: Firebase config not updated');
+          showInstructions();
+          return;
+        } else {
+          updateTest('test-config', 'success', `Project ID: ${firebaseConfig.projectId}`);
+          console.log('✅ Test 2 passed: Firebase config updated');
+        }
+      } else {
+        updateTest('test-config', 'error', 'firebase-config.js not loaded');
+        console.error('❌ Test 2 failed: firebase-config.js not found');
+        showAlert('error', '❌ firebase-config.js file not found or not loaded.');
+        return;
+      }
+      
+      // Test 3: Initialize Firebase
+      await new Promise(resolve => setTimeout(resolve, 500));
+      try {
+        const initialized = initializeFirebase();
+        if (initialized) {
+          updateTest('test-init', 'success', 'Firebase initialized successfully');
+          console.log('✅ Test 3 passed: Firebase initialized');
+        } else {
+          updateTest('test-init', 'error', 'Firebase initialization failed');
+          console.error('❌ Test 3 failed: Initialization failed');
+          showAlert('error', '❌ Firebase initialization failed. Check the console for details.');
+          return;
+        }
+      } catch (error) {
+        updateTest('test-init', 'error', `Error: ${error.message}`);
+        console.error('❌ Test 3 failed:', error);
+        showAlert('error', `❌ Initialization error: ${error.message}`);
+        return;
+      }
+      
+      // Test 4: Authentication
+      await new Promise(resolve => setTimeout(resolve, 500));
+      try {
+        if (firebase.auth()) {
+          updateTest('test-auth', 'success', 'Firebase Authentication is ready');
+          console.log('✅ Test 4 passed: Auth working');
+        } else {
+          updateTest('test-auth', 'error', 'Authentication service not available');
+          console.error('❌ Test 4 failed: Auth not available');
+          return;
+        }
+      } catch (error) {
+        updateTest('test-auth', 'error', `Error: ${error.message}`);
+        console.error('❌ Test 4 failed:', error);
+        return;
+      }
+      
+      // Test 5: Firestore
+      await new Promise(resolve => setTimeout(resolve, 500));
+      try {
+        if (firebase.firestore()) {
+          updateTest('test-firestore', 'success', 'Firestore database is ready');
+          console.log('✅ Test 5 passed: Firestore working');
+        } else {
+          updateTest('test-firestore', 'error', 'Firestore service not available');
+          console.error('❌ Test 5 failed: Firestore not available');
+          return;
+        }
+      } catch (error) {
+        updateTest('test-firestore', 'error', `Error: ${error.message}`);
+        console.error('❌ Test 5 failed:', error);
+        return;
+      }
+      
+      // All tests passed!
+      if (testsPassed === totalTests) {
+        console.log('🎉 All tests passed!');
+        showAlert('success', '🎉 All tests passed! Your Firebase configuration is working correctly. You can now use the registration system!');
+        document.getElementById('test-registration').style.display = 'block';
+        document.getElementById('test-registration').addEventListener('click', () => {
+          window.location.href = 'login.html';
+        });
+      }
+    }
+    
+    // Run tests when page loads
+    window.addEventListener('load', () => {
+      console.log('Page loaded, starting tests in 1 second...');
+      setTimeout(runTests, 1000);
+    });
+  </script>
+</body>
+</html>
