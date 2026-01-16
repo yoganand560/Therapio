@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – Therapio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-light: #d1fae5;
+      --secondary: #0f766e;
+      --secondary-dark: #115e59;
+      --background: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --gradient: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+      --shadow-lg: 0 20px 40px rgba(15, 118, 110, 0.12);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav {
+      background: white;
+      box-shadow: var(--shadow-sm);
+      padding: 15px 5%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    .user-menu {
+      position: relative;
+    }
+
+    .user-avatar-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background: var(--primary-light);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .user-avatar-btn:hover {
+      background: #a7f3d0;
+    }
+
+    .user-avatar-btn img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--secondary);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 10px;
+      background: white;
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius);
+      min-width: 200px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .dropdown.show {
+      display: block;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 12px 20px;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .dropdown a:hover {
+      background: var(--background);
+    }
+
+    .dropdown a:first-child {
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+
+    .dropdown a:last-child {
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      color: #dc2626;
+    }
+
+    .dropdown a i {
+      margin-right: 10px;
+      width: 20px;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 5%;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      background: var(--gradient);
+      color: white;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .welcome-section h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .welcome-section p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .stat-card:nth-child(1) .stat-icon { color: #3b82f6; }
+    .stat-card:nth-child(2) .stat-icon { color: #8b5cf6; }
+    .stat-card:nth-child(3) .stat-icon { color: #f59e0b; }
+    .stat-card:nth-child(4) .stat-icon { color: #10b981; }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    /* Quick Actions */
+    .section-title {
+      font-size: 1.8rem;
+      color: var(--secondary);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title i {
+      color: var(--primary);
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .action-card {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .action-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .action-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .action-card h3 {
+      color: var(--secondary);
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .action-card p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background: var(--gradient);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Recent Activity */
+    .activity-list {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 30px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 15px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .activity-icon.message {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .activity-icon.mood {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .activity-icon.session {
+      background: #e9d5ff;
+      color: #6b21a8;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-title {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .activity-time {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-light);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.3;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-section h1 {
+        font-size: 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio">
+        Therapio
+      </a>
+      <div class="user-menu">
+        <button class="user-avatar-btn" onclick="toggleDropdown()">
+          <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff&size=200" alt="User Avatar">
+          <span class="user-name" id="user-name">User</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown" id="user-dropdown">
+          <a href="#"><i class="fas fa-user"></i> My Profile</a>
+          <a href="#"><i class="fas fa-cog"></i> Settings</a>
+          <a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="welcome-section">
+      <h1>Welcome back, <span id="welcome-name">User</span>! 👋</h1>
+      <p>Here's your mental wellness journey at a glance</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-comments"></i></div>
+        <div class="stat-number" id="stat-messages">0</div>
+        <div class="stat-label">Messages Sent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+        <div class="stat-number" id="stat-sessions">0</div>
+        <div class="stat-label">Sessions Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-smile"></i></div>
+        <div class="stat-number" id="stat-moods">0</div>
+        <div class="stat-label">Mood Entries</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="stat-number" id="stat-days">0</div>
+        <div class="stat-label">Days Active</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">
+      <i class="fas fa-bolt"></i>
+      Quick Actions
+    </h2>
+    <div class="actions-grid">
+      <div class="action-card" onclick="window.location.href='ai-assistant-new.html'">
+        <div class="action-icon"><i class="fas fa-robot"></i></div>
+        <h3>AI Assistant</h3>
+        <p>Chat with your personal mental wellness assistant</p>
+        <a href="ai-assistant-new.html" class="btn">Start Chatting</a>
+      </div>
+      <div class="action-card" onclick="alert('Mood tracker coming soon!')">
+        <div class="action-icon"><i class="fas fa-heart"></i></div>
+        <h3>Track Mood</h3>
+        <p>Log how you're feeling today</p>
+        <button class="btn" onclick="event.stopPropagation(); alert('Mood tracker coming soon!')">Log Mood</button>
+      </div>
+      <div class="action-card" onclick="alert('Meditation coming soon!')">
+        <div class="action-icon"><i class="fas fa-spa"></i></div>
+        <h3>Meditation</h3>
+        <p>Practice mindfulness and relaxation</p>
+        <button class="btn" onclick="event.stopPropagation(); alert('Meditation coming soon!')">Start Session</button>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <h2 class="section-title">
+      <i class="fas fa-history"></i>
+      Recent Activity
+    </h2>
+    <div class="activity-list" id="activity-list">
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>No recent activity yet. Start using Therapio to see your activity here!</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth-system.js"></script>
+  <script>
+    console.log('📊 Dashboard loading...');
+
+    // Check if user is logged in
+    const currentUser = therapioAuth.getCurrentUser();
+    
+    if (!currentUser) {
+      console.log('❌ No user logged in, redirecting to login...');
+      window.location.href = 'login-new.html';
+    } else {
+      console.log('✅ User logged in:', currentUser);
+      loadDashboard();
+    }
+
+    function loadDashboard() {
+      // Set user info
+      document.getElementById('user-name').textContent = currentUser.name.split(' ')[0];
+      document.getElementById('welcome-name').textContent = currentUser.name.split(' ')[0];
+      document.getElementById('user-avatar').src = currentUser.avatar;
+
+      // Load stats
+      const stats = therapioAuth.getUserStats();
+      if (stats) {
+        document.getElementById('stat-messages').textContent = stats.totalMessages;
+        document.getElementById('stat-sessions').textContent = stats.totalSessions;
+        document.getElementById('stat-moods').textContent = stats.moodEntries;
+        document.getElementById('stat-days').textContent = stats.daysActive;
+      }
+
+      // Load recent activity
+      const activities = therapioAuth.getRecentActivity(10);
+      const activityList = document.getElementById('activity-list');
+      
+      if (activities.length > 0) {
+        activityList.innerHTML = activities.map(activity => {
+          const icon = activity.type === 'message' ? 'fa-comment' : 
+                      activity.type === 'mood' ? 'fa-smile' : 'fa-clock';
+          const iconClass = activity.type === 'message' ? 'message' : 
+                           activity.type === 'mood' ? 'mood' : 'session';
+          const timeAgo = formatTimeAgo(activity.timestamp);
+
+          return `
+            <div class="activity-item">
+              <div class="activity-icon ${iconClass}">
+                <i class="fas ${icon}"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">${activity.description}</div>
+                <div class="activity-time">${timeAgo}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      console.log('✅ Dashboard loaded successfully');
+    }
+
+    function formatTimeAgo(timestamp) {
+      const now = new Date();
+      const time = new Date(timestamp);
+      const diffSeconds = Math.floor((now - time) / 1000);
+
+      if (diffSeconds < 60) return 'Just now';
+      if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} minutes ago`;
+      if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} hours ago`;
+      return `${Math.floor(diffSeconds / 86400)} days ago`;
+    }
+
+    function toggleDropdown() {
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      if (!e.target.matches('.user-avatar-btn') && !e.target.closest('.user-avatar-btn')) {
+        const dropdown = document.getElementById('user-dropdown');
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    });
+
+    function handleLogout() {
+      console.log('🚪 Logging out...');
+      therapioAuth.logout();
+      window.location.href = 'login-new.html';
+    }
+  </script>
+</body>
+</html>
