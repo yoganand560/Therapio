@@ -752,15 +752,13 @@
       <li><a href="#connect">Therapy</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Support</a></li>
-      <li id="auth-link"><a class="btn" href="login.html">Login/Register</a></li>
+      <li id="auth-link"><a class="btn" href="login-new.html">Login/Register</a></li>
     </ul>
   </div>
 </nav>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="firebase-config.js"></script>
+<!-- Authentication System -->
+<script src="auth-system.js"></script>
 
 <!-- ================= HERO ================= -->
 <section class="hero" id="home">
@@ -1021,20 +1019,15 @@
 </body>
 
 <script>
-  // Check if user is logged in with Firebase Authentication
+  // Check if user is logged in with the new authentication system
   document.addEventListener("DOMContentLoaded", function() {
-    // Wait for Firebase to initialize
-    if (typeof firebase !== 'undefined' && firebase.auth) {
-      firebase.auth().onAuthStateChanged((user) => {
-        const authLink = document.getElementById("auth-link");
-        if (user && authLink) {
-          // User is signed in - show dashboard link
-          authLink.innerHTML = '<a class="btn" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>';
-        } else {
-          // User is not signed in - show login/register link
-          authLink.innerHTML = '<a class="btn" href="login.html">Login/Register</a>';
-        }
-      });
+    if (typeof therapioAuth !== 'undefined' && therapioAuth.isLoggedIn()) {
+      const currentUser = therapioAuth.getCurrentUser();
+      const authLink = document.getElementById("auth-link");
+      if (currentUser && authLink) {
+        // User is signed in - show dashboard link
+        authLink.innerHTML = '<a class="btn" href="dashboard-new.html"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>';
+      }
     }
   });
 </script>
