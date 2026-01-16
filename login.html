@@ -624,18 +624,35 @@
     
     // Login/Register Form Functionality
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('Page loaded, initializing Firebase...');
+      
+      // Check if Firebase SDK is loaded
+      if (typeof firebase === 'undefined') {
+        console.error('❌ Firebase SDK not loaded! Check your internet connection.');
+        alert('Firebase SDK failed to load. Please check your internet connection and refresh the page.');
+        return;
+      }
+      
       // Initialize Firebase
       if (initializeFirebase()) {
         auth = firebase.auth();
         db = firebase.firestore();
+        console.log('✅ Firebase initialized successfully');
         
         // Check if user is already logged in
         auth.onAuthStateChanged((user) => {
           if (user) {
+            console.log('User already logged in:', user.email);
             // User is signed in, redirect to dashboard
             window.location.href = 'dashboard.html';
+          } else {
+            console.log('No user logged in');
           }
         });
+      } else {
+        console.error('❌ Firebase initialization failed!');
+        alert('Firebase configuration error. Please check firebase-config.js file.');
+        return;
       }
       
       // Tab switching
@@ -883,6 +900,8 @@
       if (registerForm) {
         registerForm.addEventListener('submit', async function(e) {
           e.preventDefault();
+          console.log('📝 Registration form submitted');
+          
           const name = document.getElementById('register-name').value;
           const email = document.getElementById('register-email').value;
           const password = document.getElementById('register-password').value;
@@ -890,44 +909,57 @@
           const terms = document.getElementById('terms').checked;
           const submitBtn = registerForm.querySelector('button[type="submit"]');
           
+          console.log('Form data:', { name, email, passwordLength: password.length, termsAccepted: terms });
+          
           // Validation
           if (!name || !email || !password || !confirmPassword) {
+            console.error('❌ Validation failed: Missing fields');
             alert('Please fill in all fields');
             return;
           }
           
           if (password !== confirmPassword) {
+            console.error('❌ Validation failed: Passwords do not match');
             alert('Passwords do not match');
             return;
           }
           
           if (password.length < 6) {
+            console.error('❌ Validation failed: Password too short');
             alert('Password must be at least 6 characters long');
             return;
           }
           
           if (!terms) {
+            console.error('❌ Validation failed: Terms not accepted');
             alert('Please agree to the Terms of Service and Privacy Policy');
             return;
           }
+          
+          console.log('✅ Validation passed, creating account...');
           
           // Disable button and show loading
           submitBtn.disabled = true;
           submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
           
           try {
+            console.log('Creating Firebase user...');
             // Create user with Firebase Auth
             const userCredential = await auth.createUserWithEmailAndPassword(email, password);
             const user = userCredential.user;
+            console.log('✅ Firebase user created:', user.uid);
             
             // Update display name
+            console.log('Updating display name...');
             await user.updateProfile({
               displayName: name
             });
+            console.log('✅ Display name updated');
             
             const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=10b981&color=fff';
             
             // Create user profile in Firestore
+            console.log('Creating Firestore profile...');
             await db.collection('users').doc(user.uid).set({
               name: name,
               email: email,
@@ -945,6 +977,7 @@
                 moodEntries: 0
               }
             });
+            console.log('✅ Firestore profile created');
             
             // Store user session
             localStorage.setItem('therapio_user', JSON.stringify({
@@ -954,8 +987,10 @@
               loggedIn: true,
               avatar: avatarUrl
             }));
+            console.log('✅ Session stored in localStorage');
             
             alert('Registration successful! Welcome to Therapio!');
+            console.log('🎉 Registration complete! Redirecting to dashboard...');
             
             // Redirect to dashboard
             setTimeout(() => {
@@ -963,7 +998,10 @@
             }, 1000);
             
           } catch (error) {
-            console.error('Registration error:', error);
+            console.error('❌ Registration error:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            
             let errorMessage = 'Registration failed. Please try again.';
             
             if (error.code === 'auth/email-already-in-use') {
@@ -972,6 +1010,10 @@
               errorMessage = 'Invalid email address';
             } else if (error.code === 'auth/weak-password') {
               errorMessage = 'Password is too weak. Use at least 6 characters.';
+            } else if (error.code === 'auth/network-request-failed') {
+              errorMessage = 'Network error. Check your internet connection.';
+            } else if (error.message.includes('API key')) {
+              errorMessage = 'Firebase not configured. Please check firebase-config.js';
             }
             
             alert(errorMessage);

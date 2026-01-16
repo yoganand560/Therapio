@@ -16,13 +16,30 @@ let db, auth;
 
 function initializeFirebase() {
   if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    auth = firebase.auth();
-    console.log('Firebase initialized successfully');
-    return true;
+    // Check if config is still using placeholder values
+    if (firebaseConfig.apiKey === "YOUR_FIREBASE_API_KEY") {
+      console.error('🚨 FIREBASE NOT CONFIGURED! 🚨');
+      console.error('Please update firebase-config.js with your actual Firebase credentials.');
+      console.error('See FIREBASE_SETUP_INSTRUCTIONS.md for step-by-step guide.');
+      alert('⚠️ Firebase is not configured!\n\nPlease follow these steps:\n1. Open firebase-config.js\n2. Replace placeholder values with your actual Firebase config\n3. See FIREBASE_SETUP_INSTRUCTIONS.md for help');
+      return false;
+    }
+    
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      auth = firebase.auth();
+      console.log('✅ Firebase initialized successfully');
+      console.log('Project ID:', firebaseConfig.projectId);
+      return true;
+    } catch (error) {
+      console.error('❌ Firebase initialization error:', error);
+      alert('Firebase initialization failed: ' + error.message);
+      return false;
+    }
   } else {
-    console.error('Firebase SDK not loaded');
+    console.error('❌ Firebase SDK not loaded');
+    alert('Firebase SDK not loaded. Check your internet connection.');
     return false;
   }
 }
