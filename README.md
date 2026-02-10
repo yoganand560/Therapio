@@ -2,15 +2,10 @@
 
 
 
-
+# Therapio - Mental Wellness Platform
 
 ![img alt](Therapio_Image_r1sa32r1sa32r1sa.png)
 
-
-
-# Therapio - Mental Wellness Platform
-
-![Therapio Banner](Therapio_Image_r1sa32r1sa32r1sa.png)
 
 ## 🧠 About Therapio
 
