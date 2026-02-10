@@ -2,7 +2,6 @@
 
 
 
-# Therapio - Mental Wellness Platform
 
 # Therapio - Mental Wellness Platform
 
