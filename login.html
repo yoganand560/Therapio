@@ -1,1083 +1,815 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Therapio – Login/Register</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #10b981;
-      --primary-light: #d1fae5;
-      --secondary: #0f766e;
-      --secondary-dark: #115e59;
-      --background: #f8fafc;
-      --card: #ffffff;
-      --text: #1e293b;
-      --text-light: #64748b;
-      --gradient: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-      --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
-      --shadow-lg: 0 20px 40px rgba(15, 118, 110, 0.12);
-      --radius: 12px;
-      --radius-lg: 20px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
-    body {
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* ================= NAVBAR ================= */
-    nav {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 15px 5%;
-      box-shadow: var(--shadow-sm);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--secondary);
-      text-decoration: none;
-      transition: transform 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.05);
-    }
-
-    .logo img {
-      height: 40px;
-      border-radius: 8px;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 32px;
-      align-items: center;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 500;
-      transition: color 0.3s ease;
-      position: relative;
-    }
-
-    nav a:hover {
-      color: var(--secondary);
-    }
-
-    .btn {
-      background: var(--gradient);
-      color: white;
-      padding: 12px 26px;
-      border-radius: var(--radius);
-      font-weight: 600;
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    }
-
-    /* ================= LOGIN PAGE ================= */
-    .login-page {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    body.login-page {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .login-container {
-      width: 100%;
-      max-width: 550px;
-      margin: 0 auto;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-    }
-
-    /* Forms */
-    .login-form-container {
-      padding: 45px 55px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: white;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .form-header {
-      margin-bottom: 35px;
-      text-align: center;
-    }
-
-    .form-header h1 {
-      font-size: 2.3rem;
-      color: var(--secondary);
-      margin-bottom: 10px;
-      background: linear-gradient(120deg, var(--secondary-dark), var(--primary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .form-header p {
-      color: var(--text-light);
-      font-size: 1rem;
-    }
-
-    .tabs {
-      display: flex;
-      background: #f1f5f9;
-      border-radius: var(--radius);
-      padding: 5px;
-      margin-bottom: 25px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 15px;
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-light);
-      cursor: pointer;
-      border-radius: calc(var(--radius) - 2px);
-      transition: all 0.3s ease;
-    }
-
-    .tab.active {
-      background: white;
-      color: var(--secondary);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .auth-form {
-      display: none;
-    }
-
-    .auth-form.active {
-      display: block;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-      position: relative;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: 500;
-      color: var(--secondary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-    }
-
-    .form-group label i {
-      color: var(--primary);
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 13px;
-      border: 2px solid #e2e8f0;
-      border-radius: var(--radius);
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      background: #f8fafc;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: white;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-
-    .password-toggle {
-      position: absolute;
-      right: 15px;
-      top: 42px;
-      cursor: pointer;
-      color: var(--text-light);
-      transition: color 0.3s ease;
-    }
-
-    .password-toggle:hover {
-      color: var(--primary);
-    }
-
-    .form-options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-    }
-
-    .checkbox {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      color: var(--text-light);
-    }
-
-    .checkbox input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    .checkbox-group {
-      margin-bottom: 20px;
-    }
-
-    .checkbox-group .checkbox {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 0.9rem;
-    }
-
-    .checkbox-group .checkbox input[type="checkbox"] {
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    .checkbox-group .checkbox span {
-      line-height: 1.5;
-    }
-
-    .checkbox-group .checkbox a {
-      color: var(--primary);
-      text-decoration: underline;
-    }
-
-    .checkbox-group .checkbox a:hover {
-      color: var(--secondary);
-    }
-
-    .forgot-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      font-size: 0.9rem;
-    }
-
-    .forgot-link:hover {
-      color: var(--secondary);
-    }
-
-    .auth-btn {
-      width: 100%;
-      padding: 14px;
-      font-size: 1.05rem;
-      margin-bottom: 20px;
-    }
-
-    .auth-btn i {
-      margin-right: 10px;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 25px 0;
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .divider span {
-      padding: 0 15px;
-    }
-
-    .social-auth {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .social-btn {
-      width: 100%;
-      padding: 13px 20px;
-      border: 2px solid #e2e8f0;
-      border-radius: var(--radius);
-      background: white;
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      position: relative;
-    }
-
-    .social-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .social-btn img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-
-    .social-btn.google {
-      border-color: #dadce0;
-      color: #3c4043;
-    }
-
-    .social-btn.google:hover {
-      background: #f8f9fa;
-      border-color: #dadce0;
-      box-shadow: 0 1px 3px rgba(60,64,67,0.3);
-    }
-
-    .social-btn.microsoft {
-      border-color: #8c8c8c;
-      color: #5e5e5e;
-    }
-
-    .social-btn.microsoft:hover {
-      background: #f3f2f1;
-      border-color: #8c8c8c;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
-
-    .switch-form {
-      text-align: center;
-      color: var(--text-light);
-    }
-
-    .switch-form a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-
-    .switch-form a:hover {
-      color: var(--secondary);
-    }
-
-    /* Footer */
-    .login-footer {
-      padding: 30px 20px;
-      text-align: center;
-      background: transparent;
-    }
-
-    .back-home-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .back-home-btn i {
-      font-size: 0.9rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .login-form-container {
-        padding: 35px 25px;
-      }
-
-      .login-container {
-        max-width: 95%;
-        padding: 30px 15px;
-      }
-
-      .login-footer {
-        padding: 20px 15px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .form-header h1 {
-        font-size: 1.8rem;
-      }
-
-      .form-header p {
-        font-size: 0.9rem;
-      }
-      
-      .tabs {
-        flex-direction: row;
-      }
-      
-      .tab {
-        padding: 12px 10px;
-        font-size: 0.95rem;
-      }
-
-      .login-form-container {
-        padding: 30px 20px;
-      }
-
-      .btn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-      }
-
-      .login-container {
-        padding: 20px 10px;
-      }
-
-      .login-footer {
-        padding: 15px 10px;
-      }
-
-      .logo img {
-        height: 35px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapio - Mental Wellness Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Panel */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 10px 0;
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: #10b981;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #10b981;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #10b981;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #10b981;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: #10b981;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-button {
+            background-color: #10b981;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #0da271;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: #10b981;
+            cursor: pointer;
+        }
+
+        /* Hero Section with Background Image */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            margin-top: 70px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.ibb.co/k64WpYGD/Chat-GPT-Image-Jan-22-2026-10-53-13-PM.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(7, 85, 65, 0.85), rgba(16, 185, 129, 0.8));
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            color: white;
+            max-width: 900px;
+            padding: 30px;
+        }
+
+        .company-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #ffffff, #a7f3d0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #0da271);
+            color: white;
+            padding: 16px 42px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #0da271, #0b8a5f);
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 100px 0;
+            background-color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #10b981, #34d399);
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 70px;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            color: #10b981;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .about-text p {
+            font-size: 1.15rem;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background-color: #f0fdf9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 5px solid #10b981;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            color: #10b981;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #065f46;
+            margin-bottom: 15px;
+        }
+
+        .feature-desc {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Focus Section */
+        .focus-section {
+            padding: 100px 0;
+            background-color: #fff;
+        }
+
+        .focus-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .focus-content h3 {
+            font-size: 1.8rem;
+            color: #10b981;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .focus-content p {
+            font-size: 1.15rem;
+            color: #555;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .focus-groups {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .focus-group {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            padding: 30px;
+            border-radius: 15px;
+            width: 220px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .focus-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #10b981;
+        }
+
+        .focus-group h4 {
+            font-size: 1.3rem;
+            color: #065f46;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #065f46, #10b981);
+            color: white;
+            padding: 70px 0 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .footer-tagline {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .copyright {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .company-name {
+                font-size: 3.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.3rem;
+            }
+            
+            .nav-links li {
+                margin-left: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                flex-direction: column;
+                background-color: white;
+                padding: 30px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 0 0 20px 0;
+            }
+            
+            .hero-section {
+                min-height: 600px;
+            }
+            
+            .company-name {
+                font-size: 2.8rem;
+            }
+            
+            .tagline {
+                font-size: 1.3rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .feature-card {
+                padding: 25px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .company-name {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .focus-group {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
-<body class="login-page">
-  <nav>
-    <div class="nav-container">
-      <a href="index.html" class="logo">
-        <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio Logo">
-      </a>
-    </div>
-  </nav>
-
-  <div class="login-container">
-    <div class="login-form-container">
-      <div class="form-header">
-        <h1>Welcome Back</h1>
-        <p>Sign in to your Therapio account or create a new one</p>
-      </div>
-
-      <div class="tabs">
-        <button class="tab active" data-tab="login">Login</button>
-        <button class="tab" data-tab="register">Register</button>
-      </div>
-
-      <!-- Login Form -->
-      <form id="login-form" class="auth-form active">
-        <!-- Social Login Options -->
-        <div class="social-auth">
-          <button type="button" class="social-btn google" id="google-login">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-            Continue with Google
-          </button>
-          <button type="button" class="social-btn microsoft" id="microsoft-login">
-            <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft">
-            Continue with Microsoft
-          </button>
+<body>
+    <!-- Navigation Panel -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text">Therapio</div>
+            </a>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#focus">Focus</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#" class="nav-button">Get Started</a></li>
+            </ul>
         </div>
+    </nav>
 
-        <div class="divider">
-          <span>OR</span>
+    <!-- Hero Section with Background Image -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="company-name">Therapio</h1>
+                <p class="tagline">A comprehensive mental wellness platform connecting individuals with certified psychologists and providing AI-powered emotional support.</p>
+                <a href="#about" class="cta-button">Discover Therapio</a>
+            </div>
         </div>
+    </section>
 
-        <div class="form-group">
-          <label for="login-email">
-            <i class="fas fa-envelope"></i> Email Address
-          </label>
-          <input type="email" id="login-email" placeholder="Enter your email" required>
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About Therapio</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Bridging the Gap in Mental Wellness</h3>
+                    <p>Therapio is a comprehensive mental wellness platform designed to address the growing mental health challenges faced by individuals in today's fast-paced world. We connect people facing stress, anxiety, and depression with certified psychologists while offering immediate support through our free AI mental health assistant powered by Google Gemini.</p>
+                    <p>Our mission is to make mental health support accessible, affordable, and effective for everyone. We believe that emotional well-being is a fundamental human right, and technology can play a transformative role in delivering mental health services to those who need them most.</p>
+                    <p>With a focus on students and employees who face unique pressures in academic and professional environments, Therapio provides tailored support to help manage stress, improve emotional resilience, and enhance overall quality of life.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80" alt="Therapist and patient having a conversation">
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="form-group">
-          <label for="login-password">
-            <i class="fas fa-lock"></i> Password
-          </label>
-          <input type="password" id="login-password" placeholder="Enter your password" required>
-          <div class="password-toggle">
-            <i class="fas fa-eye" id="toggle-password"></i>
-          </div>
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Our Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">AI Mental Health Assistant</h3>
+                    <p class="feature-desc">24/7 free emotional support and guidance using Google Gemini API for immediate help when you need it.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="feature-title">Text Therapy</h3>
+                    <p class="feature-desc">Chat with licensed psychologists via secure messaging from the comfort of your home.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Mood Tracking</h3>
+                    <p class="feature-desc">Track and analyze your emotional wellness over time with detailed insights and patterns.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3 class="feature-title">Guided Mindfulness</h3>
+                    <p class="feature-desc">Access meditation and breathing exercises designed to reduce stress and improve focus.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="feature-title">Wellness Library</h3>
+                    <p class="feature-desc">Curated mental health resources, articles, and tools for self-improvement and education.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="feature-title">Chat History</h3>
+                    <p class="feature-desc">Persistent conversation storage with Firebase to track your progress and revisit insights.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Responsive Design</h3>
+                    <p class="feature-desc">Works seamlessly on desktop and mobile devices for support wherever you are.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Easy Setup</h3>
+                    <p class="feature-desc">Get started quickly with modern browsers, Firebase, and pre-configured Google Gemini API.</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="form-options">
-          <label class="checkbox">
-            <input type="checkbox" id="remember-me">
-            <span>Remember me</span>
-          </label>
-          <a href="#" class="forgot-link">Forgot password?</a>
+    <!-- Focus Section -->
+    <section id="focus" class="focus-section">
+        <div class="container">
+            <h2 class="section-title">Our Focus</h2>
+            <div class="focus-content">
+                <h3>Reducing Mental Stress for Students and Employees</h3>
+                <p>Therapio specifically addresses the unique mental health challenges faced by students and employees who experience high levels of stress, anxiety, and burnout in academic and professional environments. Our platform provides targeted support to help manage these pressures effectively.</p>
+                
+                <div class="focus-groups">
+                    <div class="focus-group">
+                        <div class="focus-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h4>Students</h4>
+                        <p>Academic pressure, exam stress, and future anxiety support</p>
+                    </div>
+                    
+                    <div class="focus-group">
+                        <div class="focus-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4>Employees</h4>
+                        <p>Workplace stress, burnout prevention, and work-life balance</p>
+                    </div>
+                    
+                    <div class="focus-group">
+                        <div class="focus-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Professionals</h4>
+                        <p>Career transitions, leadership stress, and professional growth</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <button type="submit" class="btn auth-btn">
-          <i class="fas fa-sign-in-alt"></i> Sign In
-        </button>
-
-        <p class="switch-form">
-          Don't have an account? <a href="#" data-tab="register">Sign up here</a>
-        </p>
-      </form>
-
-      <!-- Register Form -->
-      <form id="register-form" class="auth-form">
-        <!-- Social Registration Options -->
-        <div class="social-auth">
-          <button type="button" class="social-btn google" id="google-register">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-            Sign up with Google
-          </button>
-          <button type="button" class="social-btn microsoft" id="microsoft-register">
-            <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft">
-            Sign up with Microsoft
-          </button>
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Therapio</div>
+                <p class="footer-tagline">Connecting minds, healing hearts. Your mental wellness journey starts here.</p>
+                <a href="#" class="cta-button">Get Started Today</a>
+                <p class="copyright">&copy; 2023 Therapio. All rights reserved. A mental wellness platform connecting therapists with patients.</p>
+            </div>
         </div>
+    </footer>
 
-        <div class="divider">
-          <span>OR</span>
-        </div>
-
-        <div class="form-group">
-          <label for="register-name">
-            <i class="fas fa-user"></i> Full Name
-          </label>
-          <input type="text" id="register-name" placeholder="Enter your full name" required>
-        </div>
-
-        <div class="form-group">
-          <label for="register-email">
-            <i class="fas fa-envelope"></i> Email Address
-          </label>
-          <input type="email" id="register-email" placeholder="Enter your email" required>
-        </div>
-
-        <div class="form-group">
-          <label for="register-password">
-            <i class="fas fa-lock"></i> Password
-          </label>
-          <input type="password" id="register-password" placeholder="Create a password" required>
-          <div class="password-toggle">
-            <i class="fas fa-eye" id="toggle-register-password"></i>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="register-confirm">
-            <i class="fas fa-lock"></i> Confirm Password
-          </label>
-          <input type="password" id="register-confirm" placeholder="Confirm your password" required>
-        </div>
-
-        <div class="form-group checkbox-group">
-          <label class="checkbox">
-            <input type="checkbox" id="terms" required>
-            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
-          </label>
-        </div>
-
-        <button type="submit" class="btn auth-btn">
-          <i class="fas fa-user-plus"></i> Create Account
-        </button>
-
-        <p class="switch-form">
-          Already have an account? <a href="#" data-tab="login">Sign in here</a>
-        </p>
-      </form>
-    </div>
-  </div>
-
-  <footer class="login-footer">
-    <a href="index.html" class="btn back-home-btn">
-      <i class="fas fa-arrow-left"></i> Back to Home
-    </a>
-  </footer>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
-
-  <script>
-    // Initialize Firebase
-    let auth, db;
-    
-    // Login/Register Form Functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Page loaded, initializing Firebase...');
-      
-      // Check if Firebase SDK is loaded
-      if (typeof firebase === 'undefined') {
-        console.error('❌ Firebase SDK not loaded! Check your internet connection.');
-        alert('⚠️ Firebase SDK not loaded.\n\nThe authentication system requires Firebase. Please check:\n1. Your internet connection\n2. That you can access Google CDN\n3. Try refreshing the page\n\nYou can still use the form, but registration will fail until Firebase is configured.');
-        // Don't return - let the form still be interactive for testing
-      }
-      
-      let firebaseReady = false;
-      
-      // Initialize Firebase
-      if (typeof firebase !== 'undefined' && typeof initializeFirebase === 'function') {
-        firebaseReady = initializeFirebase();
-        if (firebaseReady) {
-          auth = firebase.auth();
-          db = firebase.firestore();
-          console.log('✅ Firebase initialized successfully');
-          
-          // Check if user is already logged in
-          auth.onAuthStateChanged((user) => {
-            if (user) {
-              console.log('User already logged in:', user.email);
-              // User is signed in, redirect to dashboard
-              window.location.href = 'dashboard.html';
-            } else {
-              console.log('No user logged in');
-            }
-          });
-        } else {
-          console.error('❌ Firebase initialization failed!');
-          alert('⚠️ Firebase Configuration Error\n\nFirebase is not properly configured. To fix this:\n\n1. Open test-firebase.html to diagnose the issue\n2. Follow FIREBASE_SETUP_INSTRUCTIONS.md\n3. Update firebase-config.js with your credentials\n\nRegistration will not work until this is fixed.');
-        }
-      } else {
-        console.warn('⚠️ Firebase config not found');
-      }
-      
-      // Tab switching
-      const tabs = document.querySelectorAll('.tab');
-      const forms = document.querySelectorAll('.auth-form');
-      const switchLinks = document.querySelectorAll('.switch-form a');
-      
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          const tabName = this.getAttribute('data-tab');
-          
-          // Update active tab
-          tabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          
-          // Show corresponding form
-          forms.forEach(form => {
-            form.classList.remove('active');
-            if (form.id === `${tabName}-form`) {
-              form.classList.add('active');
-            }
-          });
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Close mobile menu if open
+                document.getElementById('navLinks').classList.remove('active');
+            });
         });
-      });
-      
-      // Switch form links
-      switchLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const tabName = this.getAttribute('data-tab');
-          
-          // Find and click the corresponding tab
-          const targetTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-          if (targetTab) targetTab.click();
-        });
-      });
-      
-      // Password toggle visibility
-      const togglePassword = document.getElementById('toggle-password');
-      const toggleRegisterPassword = document.getElementById('toggle-register-password');
-      const loginPassword = document.getElementById('login-password');
-      const registerPassword = document.getElementById('register-password');
-      
-      function togglePasswordVisibility(button, input) {
-        if (!button || !input) return;
         
-        button.addEventListener('click', function() {
-          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-          input.setAttribute('type', type);
-          this.classList.toggle('fa-eye');
-          this.classList.toggle('fa-eye-slash');
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
         });
-      }
-      
-      togglePasswordVisibility(togglePassword, loginPassword);
-      togglePasswordVisibility(toggleRegisterPassword, registerPassword);
-      
-      // Social Authentication Handlers
-      async function handleSocialAuth(providerType) {
-        try {
-          let provider;
-          
-          if (providerType === 'google') {
-            provider = new firebase.auth.GoogleAuthProvider();
-          } else if (providerType === 'microsoft') {
-            provider = new firebase.auth.OAuthProvider('microsoft.com');
-          }
-          
-          // Show loading state
-          const allSocialBtns = document.querySelectorAll('.social-btn');
-          allSocialBtns.forEach(btn => {
-            btn.disabled = true;
-            if (btn.id.includes(providerType)) {
-              btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
-          });
-          
-          // Sign in with popup
-          const result = await auth.signInWithPopup(provider);
-          const user = result.user;
-          
-          // Check if user document exists
-          const userDoc = await db.collection('users').doc(user.uid).get();
-          
-          if (!userDoc.exists) {
-            // New user - create profile
-            const avatarUrl = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName) + '&background=10b981&color=fff';
-            
-            await db.collection('users').doc(user.uid).set({
-              name: user.displayName || user.email.split('@')[0],
-              email: user.email,
-              avatar: avatarUrl,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-              lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-              authProvider: providerType,
-              preferences: {
-                notifications: true,
-                theme: 'light',
-                emailUpdates: true
-              },
-              stats: {
-                totalSessions: 0,
-                totalMessages: 0,
-                moodEntries: 0
-              }
-            });
-          } else {
-            // Existing user - update last login
-            await db.collection('users').doc(user.uid).update({
-              lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          }
-          
-          // Get final user data
-          const finalUserDoc = await db.collection('users').doc(user.uid).get();
-          const userData = finalUserDoc.data();
-          
-          // Store user session
-          localStorage.setItem('therapio_user', JSON.stringify({
-            uid: user.uid,
-            name: userData.name || user.displayName,
-            email: user.email,
-            loggedIn: true,
-            avatar: userData.avatar || user.photoURL
-          }));
-          
-          // Redirect to dashboard
-          window.location.href = 'dashboard.html';
-          
-        } catch (error) {
-          console.error('Social auth error:', error);
-          
-          let errorMessage = 'Authentication failed. Please try again.';
-          
-          if (error.code === 'auth/popup-closed-by-user') {
-            errorMessage = 'Sign-in was cancelled. Please try again.';
-          } else if (error.code === 'auth/account-exists-with-different-credential') {
-            errorMessage = 'An account already exists with this email using a different sign-in method.';
-          } else if (error.code === 'auth/popup-blocked') {
-            errorMessage = 'Pop-up was blocked. Please allow pop-ups for this site.';
-          }
-          
-          alert(errorMessage);
-          
-          // Re-enable buttons
-          const allSocialBtns = document.querySelectorAll('.social-btn');
-          allSocialBtns.forEach(btn => {
-            btn.disabled = false;
-            if (btn.id.includes('google')) {
-              btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> ' + (btn.id.includes('login') ? 'Continue with Google' : 'Sign up with Google');
-            } else if (btn.id.includes('microsoft')) {
-              btn.innerHTML = '<img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.png" alt="Microsoft"> ' + (btn.id.includes('login') ? 'Continue with Microsoft' : 'Sign up with Microsoft');
-            }
-          });
-        }
-      }
-      
-      // Social auth button listeners
-      const googleLoginBtn = document.getElementById('google-login');
-      const googleRegisterBtn = document.getElementById('google-register');
-      const microsoftLoginBtn = document.getElementById('microsoft-login');
-      const microsoftRegisterBtn = document.getElementById('microsoft-register');
-      
-      if (googleLoginBtn) {
-        googleLoginBtn.addEventListener('click', () => handleSocialAuth('google'));
-      }
-      
-      if (googleRegisterBtn) {
-        googleRegisterBtn.addEventListener('click', () => handleSocialAuth('google'));
-      }
-      
-      if (microsoftLoginBtn) {
-        microsoftLoginBtn.addEventListener('click', () => handleSocialAuth('microsoft'));
-      }
-      
-      if (microsoftRegisterBtn) {
-        microsoftRegisterBtn.addEventListener('click', () => handleSocialAuth('microsoft'));
-      }
-      
-      // Form submission
-      const loginForm = document.getElementById('login-form');
-      const registerForm = document.getElementById('register-form');
-      
-      if (loginForm) {
-        loginForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          console.log('🔐 Login form submitted');
-          
-          // Check if Firebase is ready
-          if (!firebaseReady || typeof auth === 'undefined' || typeof db === 'undefined') {
-            console.error('❌ Firebase not ready');
-            alert('⚠️ Firebase Not Configured\n\nLogin requires Firebase to be set up.\n\nPlease:\n1. Open test-firebase.html to diagnose\n2. Follow FIREBASE_SETUP_INSTRUCTIONS.md\n3. Update firebase-config.js with your credentials');
-            return;
-          }
-          
-          const email = document.getElementById('login-email').value;
-          const password = document.getElementById('login-password').value;
-          const submitBtn = loginForm.querySelector('button[type="submit"]');
-          
-          console.log('Login attempt:', { email });
-          
-          // Simple validation
-          if (!email || !password) {
-            alert('Please fill in all fields');
-            return;
-          }
-          
-          // Disable button and show loading
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-          
-          try {
-            // Sign in with Firebase
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            
-            // Update last login
-            await db.collection('users').doc(user.uid).update({
-              lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            // Get user data
-            const userDoc = await db.collection('users').doc(user.uid).get();
-            const userData = userDoc.data();
-            
-            // Store user session
-            localStorage.setItem('therapio_user', JSON.stringify({
-              uid: user.uid,
-              name: userData.name || user.displayName,
-              email: user.email,
-              loggedIn: true,
-              avatar: userData.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userData.name) + '&background=10b981&color=fff'
-            }));
-            
-            // Redirect to dashboard
-            window.location.href = 'dashboard.html';
-          } catch (error) {
-            console.error('Login error:', error);
-            let errorMessage = 'Invalid email or password';
-            
-            if (error.code === 'auth/user-not-found') {
-              errorMessage = 'No account found with this email';
-            } else if (error.code === 'auth/wrong-password') {
-              errorMessage = 'Incorrect password';
-            } else if (error.code === 'auth/invalid-email') {
-              errorMessage = 'Invalid email address';
-            }
-            
-            alert(errorMessage);
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-          }
         });
-      }
-      
-      if (registerForm) {
-        registerForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          console.log('📝 Registration form submitted');
-          
-          // Check if Firebase is ready
-          if (!firebaseReady || typeof auth === 'undefined' || typeof db === 'undefined') {
-            console.error('❌ Firebase not ready');
-            alert('⚠️ Firebase Not Configured\n\nRegistration requires Firebase to be set up.\n\nPlease:\n1. Open test-firebase.html to diagnose\n2. Follow FIREBASE_SETUP_INSTRUCTIONS.md\n3. Update firebase-config.js with your credentials');
-            return;
-          }
-          
-          const name = document.getElementById('register-name').value;
-          const email = document.getElementById('register-email').value;
-          const password = document.getElementById('register-password').value;
-          const confirmPassword = document.getElementById('register-confirm').value;
-          const terms = document.getElementById('terms').checked;
-          const submitBtn = registerForm.querySelector('button[type="submit"]');
-          
-          console.log('Form data:', { name, email, passwordLength: password.length, termsAccepted: terms });
-          
-          // Validation
-          if (!name || !email || !password || !confirmPassword) {
-            console.error('❌ Validation failed: Missing fields');
-            alert('Please fill in all fields');
-            return;
-          }
-          
-          if (password !== confirmPassword) {
-            console.error('❌ Validation failed: Passwords do not match');
-            alert('Passwords do not match');
-            return;
-          }
-          
-          if (password.length < 6) {
-            console.error('❌ Validation failed: Password too short');
-            alert('Password must be at least 6 characters long');
-            return;
-          }
-          
-          if (!terms) {
-            console.error('❌ Validation failed: Terms not accepted');
-            alert('Please agree to the Terms of Service and Privacy Policy');
-            return;
-          }
-          
-          console.log('✅ Validation passed, creating account...');
-          
-          // Disable button and show loading
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
-          
-          try {
-            console.log('Creating Firebase user...');
-            // Create user with Firebase Auth
-            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            console.log('✅ Firebase user created:', user.uid);
-            
-            // Update display name
-            console.log('Updating display name...');
-            await user.updateProfile({
-              displayName: name
+        
+        // Add animation to feature cards when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
-            console.log('✅ Display name updated');
-            
-            const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=10b981&color=fff';
-            
-            // Create user profile in Firestore
-            console.log('Creating Firestore profile...');
-            await db.collection('users').doc(user.uid).set({
-              name: name,
-              email: email,
-              avatar: avatarUrl,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-              lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
-              preferences: {
-                notifications: true,
-                theme: 'light',
-                emailUpdates: true
-              },
-              stats: {
-                totalSessions: 0,
-                totalMessages: 0,
-                moodEntries: 0
-              }
-            });
-            console.log('✅ Firestore profile created');
-            
-            // Store user session
-            localStorage.setItem('therapio_user', JSON.stringify({
-              uid: user.uid,
-              name: name,
-              email: email,
-              loggedIn: true,
-              avatar: avatarUrl
-            }));
-            console.log('✅ Session stored in localStorage');
-            
-            alert('Registration successful! Welcome to Therapio!');
-            console.log('🎉 Registration complete! Redirecting to dashboard...');
-            
-            // Redirect to dashboard
-            setTimeout(() => {
-              window.location.href = 'dashboard.html';
-            }, 1000);
-            
-          } catch (error) {
-            console.error('❌ Registration error:', error);
-            console.error('Error code:', error.code);
-            console.error('Error message:', error.message);
-            
-            let errorMessage = 'Registration failed. Please try again.';
-            
-            if (error.code === 'auth/email-already-in-use') {
-              errorMessage = 'Email already registered. Please login instead.';
-            } else if (error.code === 'auth/invalid-email') {
-              errorMessage = 'Invalid email address';
-            } else if (error.code === 'auth/weak-password') {
-              errorMessage = 'Password is too weak. Use at least 6 characters.';
-            } else if (error.code === 'auth/network-request-failed') {
-              errorMessage = 'Network error. Check your internet connection.';
-            } else if (error.message.includes('API key')) {
-              errorMessage = 'Firebase not configured. Please check firebase-config.js';
-            }
-            
-            alert(errorMessage);
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
-          }
+        }, observerOptions);
+        
+        // Observe feature cards for animation
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
         });
-      }
-    });
-  </script>
+        
+        // Set active nav link based on scroll position
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Keep home active if at top
+            if (scrollY < 100) {
+                document.querySelector('.nav-links a[href="#"]').classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>

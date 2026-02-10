@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Therapio – About Us</title>
+  <title>About Therapio – Mental Wellness Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -35,13 +35,14 @@
       background: var(--background);
       color: var(--text);
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     /* ================= NAVBAR ================= */
     nav {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
-      padding: 15px 5%;
+      padding: 18px 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -82,3 +83,744 @@
       gap: 32px;
       align-items: center;
     }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--secondary);
+    }
+
+    nav a:hover:after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .btn {
+      background: var(--gradient);
+      color: white;
+      padding: 12px 26px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* ================= ABOUT HERO ================= */
+    .about-hero {
+      min-height: 700px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 0 5%;
+      border-radius: var(--radius-lg);
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url();
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
+
+    /* Removed the .hero-bg-overlay class completely */
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      color: rgb(9, 33, 14);
+      max-width: 900px;
+      padding: 80px 0;
+      border-radius: var(--radius-lg);
+    }
+
+    .company-name-large {
+      font-family: 'Inter', sans-serif;
+      font-size: 5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(to right, #161e18, #b7f4d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-tagline {
+      font-size: 1.8rem;
+      font-weight: 300;
+      margin-bottom: 40px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0.95;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ================= SECTIONS ================= */
+    section {
+      padding: 100px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: 2.8rem;
+      margin-bottom: 16px;
+      color: var(--secondary);
+    }
+
+    .section-subtitle {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* ================= MISSION SECTION ================= */
+    .mission-section {
+      background: linear-gradient(135deg, #f0fdf9 0%, #f4f5f5 100%);
+      border-radius: var(--radius-lg);
+      margin: 0 5% 100px;
+      padding: 80px;
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .mission-text h2 {
+      font-size: 2.5rem;
+      color: var(--secondary-dark);
+      margin-bottom: 25px;
+    }
+
+    .mission-text p {
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 30px;
+      line-height: 1.8;
+    }
+
+    .mission-image {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .mission-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .mission-image:hover img {
+      transform: scale(1.05);
+    }
+
+    /* ================= FEATURES SECTION ================= */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0,0,0,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .feature-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: var(--secondary);
+    }
+
+    .feature-card p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    /* ================= FOCUS SECTION ================= */
+    .focus-section {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 80px;
+      margin: 0 5% 100px;
+    }
+
+    .focus-content {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .focus-content h2 {
+      font-size: 2.5rem;
+      color: var(--secondary-dark);
+      margin-bottom: 25px;
+    }
+
+    .focus-content p {
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+
+    .focus-groups {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-top: 50px;
+    }
+
+    .focus-group {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      padding: 30px;
+      border-radius: var(--radius);
+      width: 250px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.3s ease;
+    }
+
+    .focus-group:hover {
+      transform: translateY(-10px);
+    }
+
+    .focus-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .focus-group h3 {
+      font-size: 1.4rem;
+      color: var(--secondary-dark);
+      margin-bottom: 10px;
+    }
+
+    .focus-group p {
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    /* ================= GETTING STARTED ================= */
+    .getting-started {
+      background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--secondary) 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 80px;
+      margin: 0 5%;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .step-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      padding: 40px 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .step-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .step-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary-light);
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .step-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: white;
+    }
+
+    .step-card p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+
+    /* ================= ABOUT COMPANY ================= */
+    .company-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-bottom: 100px;
+    }
+
+    .company-text h2 {
+      font-size: 2.5rem;
+      color: var(--secondary-dark);
+      margin-bottom: 25px;
+    }
+
+    .company-text p {
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 30px;
+      line-height: 1.8;
+    }
+
+    .company-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      text-align: center;
+    }
+
+    .stat-item {
+      background: var(--primary-light);
+      padding: 25px;
+      border-radius: var(--radius);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-item h3 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .stat-item p {
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+
+    /* ================= ANIMATIONS ================= */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 1100px) {
+      .mission-grid, .company-info {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .company-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .mission-section, .focus-section, .getting-started {
+        padding: 60px 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav .nav-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+      }
+      
+      .company-name-large {
+        font-size: 3rem;
+      }
+      
+      .hero-tagline {
+        font-size: 1.3rem;
+      }
+      
+      .section-title {
+        font-size: 2.2rem;
+      }
+      
+      section {
+        padding: 70px 5%;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .focus-groups {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .focus-group {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .mission-section, .focus-section, .getting-started {
+        margin: 0 20px 80px;
+        padding: 40px 30px;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .company-stats {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .company-name-large {
+        font-size: 2.5rem;
+      }
+      
+      .hero-tagline {
+        font-size: 1.1rem;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .social-icons {
+        gap: 15px;
+      }
+
+      .social-icons a {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav>
+  <div class="nav-container">
+    <a href="index.html" class="logo">
+      <img src="https://i.ibb.co/ZRXL2Wsz/Gemini-Generated-Image-pjrfy0pjrfy0pjrf.png" alt="Therapio Logo">
+    </a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" class="active">About</a></li>
+      <li><a href="index.html#contact">Support</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ================= ABOUT HERO ================= -->
+<section class="about-hero">
+  <div class="hero-bg-image"></div>
+  <!-- Removed the overlay div -->
+  <div class="hero-content animate-fade-in">
+    <h1 class="company-name-large">Therapio</h1>
+    <p class="hero-tagline">A comprehensive mental wellness platform connecting individuals with certified psychologists and AI-powered emotional support.</p>
+  </div>
+</section>
+
+<!-- ================= MISSION SECTION ================= -->
+<section id="mission" class="mission-section animate-fade-in">
+  <div class="mission-grid">
+    <div class="mission-text">
+      <h2>Bridging the Gap in Mental Wellness</h2>
+      <p>Therapio is a comprehensive mental wellness platform designed to address the growing mental health challenges faced by individuals in today's fast-paced world. We connect people facing stress, anxiety, and depression with certified psychologists while offering immediate support through our free AI mental health assistant powered by Google Gemini.</p>
+      <p>Our mission is to make mental health support accessible, affordable, and effective for everyone. We believe that emotional well-being is a fundamental human right, and technology can play a transformative role in delivering mental health services to those who need them most.</p>
+      <p>With a focus on students and employees who face unique pressures in academic and professional environments, Therapio provides tailored support to help manage stress, improve emotional resilience, and enhance overall quality of life.</p>
+    </div>
+    <div class="mission-image">
+      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Therapist and patient having a conversation">
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES SECTION ================= -->
+<section>
+  <div class="section-header">
+    <h2 class="section-title">Our Comprehensive Features</h2>
+    <p class="section-subtitle">Everything you need for your mental wellness journey in one platform</p>
+  </div>
+  
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Mental Health Assistant</h3>
+      <p>24/7 free emotional support and guidance using Google Gemini API for immediate help when you need it most. Get personalized responses and coping strategies anytime.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📹</div>
+      <h3>Video Therapy Sessions</h3>
+      <p>Secure, face-to-face video consultations with licensed therapists from the comfort of your home. Experience personal connection with high-quality video and audio.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>Text Therapy</h3>
+      <p>Chat with licensed psychologists via secure messaging from the comfort and privacy of your own space. Connect with professionals who understand your unique needs.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Mood Tracking</h3>
+      <p>Track and analyze your emotional wellness over time with detailed insights and patterns. Understand your triggers and progress with visual analytics.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🧘</div>
+      <h3>Guided Mindfulness</h3>
+      <p>Access meditation and breathing exercises designed by experts to reduce stress, improve focus, and promote overall mental well-being.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📚</div>
+      <h3>Wellness Library</h3>
+      <p>Curated mental health resources, articles, and tools for self-improvement and education. Stay informed with evidence-based content.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <h3>Chat History</h3>
+      <p>Persistent conversation storage with Firebase to track your progress and revisit insights. Your journey is always saved securely.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Responsive Design</h3>
+      <p>Works seamlessly on desktop and mobile devices. Access support wherever you are, whenever you need it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOCUS SECTION ================= -->
+<section class="focus-section animate-fade-in">
+  <div class="focus-content">
+    <h2>Our Focus: Students & Professionals</h2>
+    <p>Therapio specifically addresses the unique mental health challenges faced by students and employees who experience high levels of stress, anxiety, and burnout in academic and professional environments. Our platform provides targeted support to help manage these pressures effectively.</p>
+    
+    <div class="focus-groups">
+      <div class="focus-group">
+        <div class="focus-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3>Students</h3>
+        <p>Academic pressure, exam stress, future anxiety, and social challenges support</p>
+      </div>
+      
+      <div class="focus-group">
+        <div class="focus-icon">
+          <i class="fas fa-briefcase"></i>
+        </div>
+        <h3>Employees</h3>
+        <p>Workplace stress, burnout prevention, work-life balance, and career transitions</p>
+      </div>
+      
+      <div class="focus-group">
+        <div class="focus-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Professionals</h3>
+        <p>Leadership stress, performance anxiety, professional growth, and industry pressures</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GETTING STARTED ================= -->
+<section class="getting-started animate-fade-in">
+  <div class="section-header">
+    <h2 class="section-title" style="color: white;">Getting Started</h2>
+    <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">Start your mental wellness journey in just a few simple steps</p>
+  </div>
+  
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <h3>Create Your Account</h3>
+      <p>Sign up with your email or social account</p>
+      <p style="font-size: 0.9rem; opacity: 0.8;">Takes less than 2 minutes</p>
+    </div>
+    
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <h3>Choose Your Plan</h3>
+      <p>Select from free AI assistant or premium therapy plans</p>
+      <p style="font-size: 0.9rem; opacity: 0.8;">No commitment required</p>
+    </div>
+    
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <h3>Start Your Journey</h3>
+      <p>Connect with AI assistant or match with a therapist</p>
+      <p style="font-size: 0.9rem; opacity: 0.8;">Begin immediately</p>
+    </div>
+  </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT COMPANY ================= -->
+<section class="company-info animate-fade-in">
+  <div class="company-text">
+    <h2>Why Choose Therapio?</h2>
+    <p>Therapio stands out by combining cutting-edge AI technology with human expertise. Our platform ensures that everyone has access to mental health support, regardless of location, schedule, or budget constraints.</p>
+    <p>We maintain the highest standards of privacy and security, with all conversations encrypted and stored securely. Our team of certified psychologists and AI specialists work together to provide the most effective mental wellness solutions.</p>
+    <p>Join thousands of users who have found balance, peace, and improved mental health through Therapio's innovative approach to wellness.</p>
+  </div>
+  
+  <div class="company-stats">
+    <div class="stat-item">
+      <h3>10K+</h3>
+      <p>Users Helped</p>
+    </div>
+    <div class="stat-item">
+      <h3>50+</h3>
+      <p>Certified Psychologists</p>
+    </div>
+    <div class="stat-item">
+      <h3>24/7</h3>
+      <p>AI Support Available</p>
+    </div>
+    <div class="stat-item">
+      <h3>98%</h3>
+      <p>Satisfaction Rate</p>
+    </div>
+    <div class="stat-item">
+      <h3>100+</h3>
+      <p>Countries Served</p>
+    </div>
+    <div class="stat-item">
+      <h3>10M+</h3>
+      <p>Messages Processed</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Check if user is logged in with the new authentication system
+  document.addEventListener("DOMContentLoaded", function() {
+    // If you have the auth system, you can add it here
+    const authLink = document.getElementById("auth-link");
+    
+    // Animation for elements on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in');
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all sections for animation
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+  });
+</script>
+
+</body>
+</html>

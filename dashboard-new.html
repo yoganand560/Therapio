@@ -217,76 +217,222 @@
     }
 
     /* Quick Actions */
-    .section-title {
-      font-size: 1.8rem;
-      color: var(--secondary);
-      margin-bottom: 25px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+  /* Updated Quick Actions Section */
+    /* Updated Quick Actions Section */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
 
-    .section-title i {
-      color: var(--primary);
-    }
+.action-card {
+  background: white;
+  padding: 30px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-top: 4px solid;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
-    .actions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      margin-bottom: 40px;
-    }
+.action-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
 
-    .action-card {
-      background: white;
-      padding: 30px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-md);
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
+.action-card:nth-child(1) {
+  border-color: #3b82f6;
+}
 
-    .action-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-lg);
-    }
+.action-card:nth-child(2) {
+  border-color: #8b5cf6;
+}
 
-    .action-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
+.action-card:nth-child(3) {
+  border-color: #f59e0b;
+}
 
-    .action-card h3 {
-      color: var(--secondary);
-      margin-bottom: 10px;
-      font-size: 1.3rem;
-    }
+/* Colorful icons with gradient backgrounds */
+.action-icon {
+  font-size: 2.8rem;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  flex-shrink: 0;
+}
 
-    .action-card p {
-      color: var(--text-light);
-      margin-bottom: 20px;
-    }
+.action-card:nth-child(1) .action-icon {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
 
-    .btn {
-      background: var(--gradient);
-      color: white;
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
+.action-card:nth-child(2) .action-icon {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+}
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    }
+.action-card:nth-child(3) .action-icon {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+}
 
+/* Content area - ensures text doesn't push buttons */
+.action-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.action-card h3 {
+  color: var(--secondary);
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  min-height: 40px;
+}
+
+.action-card p {
+  color: var(--text-light);
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* Standardized button styles */
+.action-card .btn {
+  background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+  color: white;
+  padding: 12px 30px;
+  border-radius: var(--radius);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.95rem;
+  width: auto;
+  min-width: 160px;
+  text-align: center;
+  margin-top: auto;
+  align-self: center;
+}
+
+/* Colorful button backgrounds - OVERRIDES the default green */
+.action-card:nth-child(1) .btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.action-card:nth-child(2) .btn {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.action-card:nth-child(3) .btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Hover effects for buttons */
+.action-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+}
+
+/* Subtle decorative background elements */
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  opacity: 0.08;
+  z-index: 0;
+}
+
+.action-card:nth-child(1)::before {
+  background: #3b82f6;
+}
+
+.action-card:nth-child(2)::before {
+  background: #8b5cf6;
+}
+
+.action-card:nth-child(3)::before {
+  background: #f59e0b;
+}
+
+/* Ensure button container has consistent spacing */
+.action-button-container {
+  margin-top: auto;
+  padding-top: 15px;
+}
+
+/* For hover glow effect */
+.action-card:hover .action-icon {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-card {
+    padding: 25px 20px;
+  }
+  
+  .action-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 2.5rem;
+  }
+  
+  .action-card .btn {
+    padding: 12px 25px;
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-card {
+    padding: 20px 15px;
+  }
+  
+  .action-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 2.2rem;
+  }
+  
+  .action-card h3 {
+    font-size: 1.2rem;
+    min-height: 35px;
+  }
+  
+  .action-card .btn {
+    padding: 10px 20px;
+    min-width: 130px;
+    font-size: 0.9rem;
+  }
+}
     /* Recent Activity */
     .activity-list {
       background: white;
@@ -427,31 +573,38 @@
     </div>
 
     <!-- Quick Actions -->
-    <h2 class="section-title">
-      <i class="fas fa-bolt"></i>
-      Quick Actions
-    </h2>
     <div class="actions-grid">
-      <div class="action-card" onclick="window.location.href='ai-assistant-new.html'">
-        <div class="action-icon"><i class="fas fa-robot"></i></div>
-        <h3>AI Assistant</h3>
-        <p>Chat with your personal mental wellness assistant</p>
+  <div class="action-card" onclick="window.location.href='ai-assistant-new.html'">
+    <div class="action-icon"><i class="fas fa-robot"></i></div>
+    <div class="action-content">
+      <h3>AI Assistant</h3>
+      <p>Chat with your personal mental wellness assistant</p>
+      <div class="action-button-container">
         <a href="ai-assistant-new.html" class="btn">Start Chatting</a>
       </div>
-      <div class="action-card" onclick="alert('Mood tracker coming soon!')">
-        <div class="action-icon"><i class="fas fa-heart"></i></div>
-        <h3>Track Mood</h3>
-        <p>Log how you're feeling today</p>
+    </div>
+  </div>
+  <div class="action-card" onclick="alert('Mood tracker coming soon!')">
+    <div class="action-icon"><i class="fas fa-heart"></i></div>
+    <div class="action-content">
+      <h3>Track Mood</h3>
+      <p>Log how you're feeling today</p>
+      <div class="action-button-container">
         <button class="btn" onclick="event.stopPropagation(); alert('Mood tracker coming soon!')">Log Mood</button>
       </div>
-      <div class="action-card" onclick="alert('Meditation coming soon!')">
-        <div class="action-icon"><i class="fas fa-spa"></i></div>
-        <h3>Meditation</h3>
-        <p>Practice mindfulness and relaxation</p>
+    </div>
+  </div>
+  <div class="action-card" onclick="alert('Meditation coming soon!')">
+    <div class="action-icon"><i class="fas fa-spa"></i></div>
+    <div class="action-content">
+      <h3>Meditation</h3>
+      <p>Practice mindfulness and relaxation</p>
+      <div class="action-button-container">
         <button class="btn" onclick="event.stopPropagation(); alert('Meditation coming soon!')">Start Session</button>
       </div>
     </div>
-
+  </div>
+</div>
     <!-- Recent Activity -->
     <h2 class="section-title">
       <i class="fas fa-history"></i>
